@@ -45,7 +45,7 @@ export default async function handler(
 
         return api.res(res, 200, true, `Login success`, { token })
 
-    } catch (error) {
+    } catch (error: any) {
         if(error instanceof z.ZodError) {
             const validation = error.errors.map((error) => ({
                 field: error.path[0],
