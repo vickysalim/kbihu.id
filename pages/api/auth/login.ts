@@ -3,7 +3,7 @@ import { PrismaClient } from '@prisma/client'
 import { z } from 'zod'
 import bcrypt from 'bcrypt'
 import jwt, { Secret } from 'jsonwebtoken'
-import api from '@/backend/api'
+import api from '@/lib/api'
 
 const prisma = new PrismaClient()
 

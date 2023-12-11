@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import axios from 'axios'
 import { z } from 'zod'
 
@@ -15,6 +15,13 @@ const AuthLogin: React.FC = () => {
 
     const [username, setUsername] = useState('')
     const [password, setPassword] = useState('')
+
+    const [isAuth, setIsAuth] = useState(true)
+
+    useEffect(() => {
+        if(localStorage.getItem('token')) window.location.href = '/dashboard'
+        else setIsAuth(false)
+    }, [isAuth])
 
     const validateLogin = async (e: React.FormEvent<HTMLFormElement>) => {
         e.preventDefault()
@@ -49,6 +56,9 @@ const AuthLogin: React.FC = () => {
             })
 
             setMessage(data.message)
+            localStorage.setItem('token', data.data.token)
+            window.location.href = '/dashboard'
+
         } catch (error: any) {
             if(error.response) {
                 const fieldError = error.response.data.message
@@ -61,6 +71,8 @@ const AuthLogin: React.FC = () => {
     }
 
     return (
+        <>
+        { isAuth ? ('') :
         <div className='w-full xl:flex xl:justify-center'>
             <div className='xl:w-1/2 p-4 sm:p-12.5 xl:p-17.5'>
                 <h2 className="mb-9 text-2xl font-bold text-black">
@@ -68,6 +80,7 @@ const AuthLogin: React.FC = () => {
                 </h2>
 
                 { message && <p className={`${message.includes('Error') ? 'bg-red-500' : 'bg-green-500'} text-white p-4 rounded-lg`}>{message}</p> }
+                
                 <form onSubmit={validateLogin}>
                     <div className="relative my-2">
                         <input
@@ -99,6 +112,8 @@ const AuthLogin: React.FC = () => {
                 </form>
             </div>
         </div>
+        }
+        </>
     )
 }
 
