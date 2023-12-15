@@ -1,6 +1,9 @@
 import { Transition } from '@headlessui/react'
 import Link from 'next/link'
-import { useState } from 'react';
+import { useState } from 'react'
+import { Menu } from '@headlessui/react'
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
+import { faChevronDown } from '@fortawesome/free-solid-svg-icons'
 
 const Header = () => {
   const [isOpen, setIsOpen] = useState(false);
@@ -8,9 +11,9 @@ const Header = () => {
     <nav className="bg-white border-b border-grayscale-200 sticky top-0 z-50">
         <div className="max-w-screen-xl mx-auto">
             <div className="flex items-center h-16 w-full">
-                <div className="flex items items-center mx-4 lg:mx-0 justify-between w-full">
+                <div className="flex items items-center mx-4 xl:mx-0 justify-between w-full">
                     <div className="flex justify-center items-center flex-shrink-0">
-                        Dashboard
+                        KBIHU.id
                     </div>
                     <div className="hidden md:block">
                         <div className="flex items-baseline space-x-4">
@@ -21,9 +24,31 @@ const Header = () => {
                     </div>
                     <div className="hidden md:block">
                         <div className="flex items-baseline space-x-4">
-                            <Link className="cursor-pointer text-primary-500 font-light px-4 py-1.5 rounded-md text-md hover:text-primary-600 border border-primary-500" href="/login">
-                                Login
-                            </Link>
+                            <Menu>
+                                <Menu.Button className='flex flex-row items-center'>
+                                    <img src='https://cdn-icons-png.flaticon.com/512/9131/9131529.png' alt="avatar" className="w-6 h-6 rounded-full" />
+                                    <span className='ml-2 mr-2'>Name</span>
+                                    <FontAwesomeIcon icon={faChevronDown} className='w-3 h-3'/>
+                                </Menu.Button>
+                                <Menu.Items className="origin-top-right absolute right-4 mt-10 w-56 rounded-md shadow-lg bg-white ring-1 ring-black ring-opacity-5 divide-y divide-gray-100 focus:outline-none">
+                                    <div className="py-2 flex flex-col gap-2">
+                                        <Menu.Item>
+                                            {({ active }) => (
+                                            <Link href="/account-settings" className={`${active && 'bg-blue-500 text-white'} py-2 px-2`}>
+                                                Account settings
+                                            </Link>
+                                            )}
+                                        </Menu.Item>
+                                        <Menu.Item>
+                                            {({ active }) => (
+                                            <Link href="/logout" className={`${active && 'bg-blue-500 text-white'} py-2 px-2`}>
+                                                Logout
+                                            </Link>
+                                            )}
+                                        </Menu.Item>
+                                    </div>
+                                </Menu.Items>
+                            </Menu>
                         </div>
                     </div>
                     

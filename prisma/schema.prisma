@@ -16,8 +16,10 @@ model company {
   city             String             @db.VarChar(64)
   province         String             @db.VarChar(64)
   postal_code      Int
-  company_logo     String             @db.VarChar(48)
+  company_logo     String?            @db.VarChar(48)
   phone_number     String             @db.VarChar(16)
+  leader           String             @db.VarChar(128)
+  license          String             @db.VarChar(64)
   created_at       DateTime           @default(now()) @db.DateTime(0)
   updated_at       DateTime           @default(now()) @db.DateTime(0)
   deleted_at       DateTime?          @db.DateTime(0)

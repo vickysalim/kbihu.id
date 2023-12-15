@@ -6,25 +6,28 @@ import { PrismaClient } from '@prisma/client'
 const prisma = new PrismaClient()
 
 const validation = z.object({
-    userId: z.string().min(1, { message: 'UserID is required' })
+    id: z.string().min(1, { message: `ID is required` })
 })
 
 export default async function handler(
     req: NextApiRequest,
     res: NextApiResponse
 ) {
-    api.method(req, res, 'GET')
+    api.method(req, res, `DELETE`)
 
     try {
         const reqBody = validation.parse(req.body)
 
-        const data = await prisma.user_account.findUnique({
+        await prisma.company.delete({
             where: {
-                id: reqBody.userId
+                id: reqBody.id
             }
+        }).catch((err) => {
+            return api.res(res, 404, false, `Company not found`)
         })
 
-    } catch (error: any) {
+        return api.res(res, 200, true, `Company deleted`)
+    } catch (error) {
         if(error instanceof z.ZodError) {
             const validation = error.errors.map((error) => ({
                 field: error.path[0],
