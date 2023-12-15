@@ -18,12 +18,26 @@ export default async function handler(
     try {
         const reqBody = validation.parse(req.body)
 
-        await prisma.company.delete({
+        await prisma.company.update({
             where: {
                 id: reqBody.id
+            },
+            data: {
+                deleted_at: new Date()
             }
         }).catch((err) => {
             return api.res(res, 404, false, `Company not found`)
+        })
+
+        await prisma.user_account.updateMany({
+            where: {
+                company_id: reqBody.id
+            },
+            data: {
+                deleted_at: new Date()
+            }
+        }).catch((err) => {
+            return api.res(res, 404, false, `User not found`)
         })
 
         return api.res(res, 200, true, `Company deleted`)

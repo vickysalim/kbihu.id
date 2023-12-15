@@ -31,6 +31,10 @@ export default async function handler(
             return api.res(res, 404, false, `Username not found`)
         }
 
+        if(data.deleted_at) {
+            return api.res(res, 404, false, `Username not found`)
+        }
+
         const matchPassword = await bcrypt.compare(reqBody.password, data.password)
 
         if(!matchPassword) {
