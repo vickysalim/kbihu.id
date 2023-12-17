@@ -1,9 +1,7 @@
 import type { NextApiRequest, NextApiResponse } from 'next'
 import { z } from 'zod'
 import api from '@/lib/api'
-import { PrismaClient } from '@prisma/client'
-
-const prisma = new PrismaClient()
+import prisma from '@/lib/prisma'
 
 const validation = z.object({
     id: z.string().min(1, { message: `ID is required` })

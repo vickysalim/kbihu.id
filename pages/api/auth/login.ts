@@ -1,11 +1,9 @@
 import { NextApiRequest, NextApiResponse } from 'next'
-import { PrismaClient } from '@prisma/client'
 import { z } from 'zod'
 import bcrypt from 'bcrypt'
 import jwt, { Secret } from 'jsonwebtoken'
 import api from '@/lib/api'
-
-const prisma = new PrismaClient()
+import prisma from '@/lib/prisma'
 
 const validation = z.object({
     username: z.string().min(1, { message: `Username is required` }),

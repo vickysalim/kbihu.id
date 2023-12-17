@@ -29,16 +29,28 @@ const SuperadminIndexLayout: React.FC = () => {
     const [company, setCompany] = useState([companyModel])
 
     const [detailModalOpen, setDetailModalOpen] = useState(false)
-    const [selectedCompany, setSelectedCompany] = useState(companyModel)
+    const [detailCompany, setDetailCompany] = useState(companyModel)
 
     const handleOpenDetailModal = (item: any) => {
         setDetailModalOpen(true)
-        setSelectedCompany(item)
+        setDetailCompany(item)
     }
 
     const handleCloseDetailModal = () => {
         setDetailModalOpen(false)
-        setSelectedCompany(companyModel)
+        setDetailCompany(companyModel)
+    }
+
+    const handleEdit = async (id: string) => {
+        try {
+            const response = await axios.put(`/api/company/update/${id}`, {
+                
+            })
+
+            console.log(response.data.data)
+        } catch (error) {
+            console.log(error)
+        }
     }
 
     const handleDelete = async (id: string) => {
@@ -165,17 +177,17 @@ const SuperadminIndexLayout: React.FC = () => {
                             </button>
                         </Dialog.Title>
                         <Dialog.Description className='mt-4 flex flex-col'>
-                            <p className='text-lg font-semibold mb-2'>{selectedCompany.name}</p>
+                            <p className='text-lg font-semibold mb-2'>{detailCompany.name}</p>
                             <p className='flex flex-row w-full items-center mb-1'>
                                 <FontAwesomeIcon icon={faMap} className='w-4 text-blue-500 mr-3'/>
-                                {selectedCompany.street}, Kel. {selectedCompany.subdistrict}, Kec. {selectedCompany.district}, Kota {selectedCompany.city}, {selectedCompany.province}, {selectedCompany.postal_code}</p>
+                                {detailCompany.street}, Kel. {detailCompany.subdistrict}, Kec. {detailCompany.district}, Kota {detailCompany.city}, {detailCompany.province}, {detailCompany.postal_code}</p>
                             <p className='flex flex-row w-full items-center mb-1'>
                                 <FontAwesomeIcon icon={faUserSolid} className='w-4 text-blue-500 mr-3'/>
-                                [not yet]
+                                {detailCompany.leader}
                             </p>
                             <p className='flex flex-row w-full items-center'>
                                 <FontAwesomeIcon icon={faPhone} className='w-4 text-blue-500 mr-3'/>
-                                Nomor Telepon: {selectedCompany.phone_number}
+                                {detailCompany.phone_number}
                             </p>
                         </Dialog.Description>
                     </Dialog.Panel>

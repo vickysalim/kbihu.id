@@ -1,11 +1,9 @@
 import type { NextApiRequest, NextApiResponse } from 'next'
 import { z } from 'zod'
 import api from '@/lib/api'
-import { PrismaClient } from '@prisma/client'
 import { v4 as uuidv4 } from 'uuid'
 import bcrypt from 'bcrypt'
-
-const prisma = new PrismaClient()
+import prisma from '@/lib/prisma'
 
 const validation = z.object({
     name: z.string().min(1, { message: `Nama KBIHU wajib dimasukkan` }),
