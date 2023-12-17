@@ -12,12 +12,17 @@ export default async function handler(
     api.method(req, res, 'GET')
 
     try {
-        const company = await prisma.company.count()
+        const company = await prisma.company.count({
+            where: {
+                deleted_at: null
+            }
+        })
 
         const user = await prisma.user_account.count({
             where: {
                 role: 'User',
-                company_id: { not: null }
+                company_id: { not: null },
+                deleted_at: null
             }
         })
 

@@ -7,6 +7,12 @@ import { faChevronDown } from '@fortawesome/free-solid-svg-icons'
 
 const Header = () => {
   const [isOpen, setIsOpen] = useState(false);
+
+  const handleLogout = () => {
+    localStorage.removeItem('token');
+    window.location.href = '/auth/login';
+  }
+
   return (
     <nav className="bg-white border-b border-grayscale-200 sticky top-0 z-50">
         <div className="max-w-screen-xl mx-auto">
@@ -27,7 +33,7 @@ const Header = () => {
                             <Menu>
                                 <Menu.Button className='flex flex-row items-center'>
                                     <img src='https://cdn-icons-png.flaticon.com/512/9131/9131529.png' alt="avatar" className="w-6 h-6 rounded-full" />
-                                    <span className='ml-2 mr-2'>Name</span>
+                                    <span className='ml-2 mr-2'>Akun</span>
                                     <FontAwesomeIcon icon={faChevronDown} className='w-3 h-3'/>
                                 </Menu.Button>
                                 <Menu.Items className="origin-top-right absolute right-4 mt-10 w-56 rounded-md shadow-lg bg-white ring-1 ring-black ring-opacity-5 divide-y divide-gray-100 focus:outline-none">
@@ -41,9 +47,9 @@ const Header = () => {
                                         </Menu.Item>
                                         <Menu.Item>
                                             {({ active }) => (
-                                            <Link href="/logout" className={`${active && 'bg-blue-500 text-white'} py-2 px-2`}>
+                                            <button onClick={() => handleLogout()} className={`${active && 'bg-blue-500 text-white'} py-2 px-2 text-left`}>
                                                 Logout
-                                            </Link>
+                                            </button>
                                             )}
                                         </Menu.Item>
                                     </div>

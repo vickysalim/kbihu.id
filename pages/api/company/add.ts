@@ -37,34 +37,36 @@ export default async function handler(
 
         api.exist(res, userExist, 'Username')
 
-        const company = await prisma.company.create({
-            data: {
-                id: uuidv4(),
-                name: reqBody.name,
-                street: reqBody.street,
-                district: reqBody.district,
-                subdistrict: reqBody.subdistrict,
-                city: reqBody.city,
-                province: reqBody.province,
-                postal_code: reqBody.postal_code,
-                phone_number: reqBody.phone_number,
-                leader: reqBody.leader,
-                license: reqBody.license,
-            },
-          })
+        if(!userExist) {
+            const company = await prisma.company.create({
+                data: {
+                    id: uuidv4(),
+                    name: reqBody.name,
+                    street: reqBody.street,
+                    district: reqBody.district,
+                    subdistrict: reqBody.subdistrict,
+                    city: reqBody.city,
+                    province: reqBody.province,
+                    postal_code: reqBody.postal_code,
+                    phone_number: reqBody.phone_number,
+                    leader: reqBody.leader,
+                    license: reqBody.license,
+                },
+            })
+    
+            const user = await prisma.user_account.create({
+                data: {
+                    id: uuidv4(),
+                    username: reqBody.username,
+                    password: await bcrypt.hash(reqBody.password, 10),
+                    phone_number: reqBody.phone_number,
+                    role: 'Admin',
+                    company_id: company.id
+                }
+            })
 
-          const user = await prisma.user_account.create({
-            data: {
-                id: uuidv4(),
-                username: reqBody.username,
-                password: await bcrypt.hash(reqBody.password, 10),
-                phone_number: reqBody.phone_number,
-                role: 'Admin',
-                company_id: company.id
-            }
-          })
-
-        return api.res(res, 200, true, `Successfully add new company`, { company, user })
+            return api.res(res, 200, true, `Successfully add new company`, { company, user })
+        }
     } catch (error) {
         if(error instanceof z.ZodError) {
             const validation = error.errors.map((error) => ({

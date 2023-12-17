@@ -23,6 +23,7 @@ export default async function handler(
                 company_logo: true,
                 phone_number: true,
                 leader: true,
+                license: true,
             },
             where: {
                 deleted_at: null

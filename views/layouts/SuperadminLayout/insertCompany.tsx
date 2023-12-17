@@ -20,9 +20,8 @@ const validation = z.object({
     password: z.string().min(1, { message: `Password wajib dimasukkan` }),
 })
 
-const SuperadminInsertCompanyLayout = ({ loadData }: any): JSX.Element => {
+const SuperadminInsertCompanyLayout = ({ loadData, setMessage }: any): JSX.Element => {
 
-    const [message, setMessage] = useState('')
     const [validationMessage, setValidationMessage] = useState<{ [key: string]: string}>({})
 
     const [name, setName] = useState('')
@@ -40,7 +39,6 @@ const SuperadminInsertCompanyLayout = ({ loadData }: any): JSX.Element => {
 
     const validateInsert = async (e: React.FormEvent<HTMLFormElement>) => {
         e.preventDefault()
-        setMessage('')
         setValidationMessage({})
 
         try {
@@ -57,7 +55,7 @@ const SuperadminInsertCompanyLayout = ({ loadData }: any): JSX.Element => {
                 })
                 setValidationMessage(errorMap)
             } else {
-                console.error(`Unknown error`)
+                setMessage(`Unknown error`)
             }
         }
     }
@@ -99,7 +97,6 @@ const SuperadminInsertCompanyLayout = ({ loadData }: any): JSX.Element => {
             if(error.response) {
                 const fieldError = error.response.data.message
                 setMessage(`Error: ${fieldError}`)
-                console.log(fieldError)
             } else {
                 setMessage(`Unknown Error`)
             }
@@ -244,7 +241,6 @@ const SuperadminInsertCompanyLayout = ({ loadData }: any): JSX.Element => {
                         <FontAwesomeIcon icon={faPlus} />
                         <span className='ml-1'>Tambah</span>
                     </button>
-                    { message && <p className={`${message.includes('Error') ? 'bg-red-500' : 'bg-green-500'} text-white mt-2 p-4 rounded-lg`}>{message}</p> }
                 </form>
             </Disclosure.Panel>
         </Disclosure>
