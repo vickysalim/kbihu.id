@@ -5,8 +5,8 @@ import Card from '@/views/components/Card'
 import { useEffect, useState } from 'react'
 import axios from 'axios'
 import { Dialog } from '@headlessui/react'
-import SuperadminInsertCompanyLayout from './insertCompany'
-import SuperadminEditCompanyLayout from './editCompany'
+import SuperadminInsertCompanyLayout from './company/insert'
+import SuperadminEditCompanyLayout from './company/edit'
 
 const SuperadminIndexLayout: React.FC = () => {
     const [message, setMessage] = useState('')

@@ -1,6 +1,5 @@
-import { faPlus } from '@fortawesome/free-solid-svg-icons'
+import { faPen } from '@fortawesome/free-solid-svg-icons'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-import { Disclosure } from '@headlessui/react'
 import { z } from 'zod'
 import { useState } from 'react'
 import axios from 'axios'
@@ -203,7 +202,7 @@ const SuperadminEditCompanyLayout = ({ loadData, company, setMessage }: any): JS
                     </div>
                 </div>
                 <button className="mt-2 bg-blue-500 text-white active:bg-blue-600 font-bold uppercase text-xs px-4 py-2 rounded shadow outline-none focus:outline-none">
-                    <FontAwesomeIcon icon={faPlus} />
+                    <FontAwesomeIcon icon={faPen} />
                     <span className='ml-1'>Edit</span>
                 </button>
             </form>
