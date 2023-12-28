@@ -77,7 +77,7 @@ export default async function handler(
                         return api.res(res, 404, false, `Failed to update data`)
                     })
             
-                    return api.res(res, 200, true, `Company updated`)
+                    return api.res(res, 200, true, `Company updated`, finalFileName)
                 } catch (error) {
                     return api.error(res, error.message)
                 }
