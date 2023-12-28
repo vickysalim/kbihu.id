@@ -1,6 +1,7 @@
 import Loader from '@/views/components/Loader'
 import DashboardLayout from '@/views/layouts/DashboardLayout'
 import SuperadminIndexLayout from '@/views/layouts/SuperadminLayout/dashboard'
+import AdminIndexLayout from '@/views/layouts/AdminLayout/dashboard'
 import axios from 'axios'
 import { useEffect, useState } from 'react'
 
@@ -26,9 +27,13 @@ const DashboardIndex: React.FC = () => {
                 }
             })
 
-            setUser(response.data.data)
-            
-            setIsAuth(true)
+            if(response.data.data.role == 'User') {
+                localStorage.removeItem('token')
+                window.location.href = '/auth/login'
+            } else {
+                setUser(response.data.data)
+                setIsAuth(true)
+            }
         } catch (error) {
             localStorage.removeItem('token')
             window.location.href = '/auth/login'
@@ -45,11 +50,11 @@ const DashboardIndex: React.FC = () => {
     return (
         <>
             { isAuth ? (
-                <DashboardLayout pageName='Dashboard'>
+                <DashboardLayout pageName='Dashboard' role={user.role}>
                     { user.role == 'Superadmin' ? (
                         <SuperadminIndexLayout/>
                     ) : user.role == 'Admin' ? (
-                        <p>Admin</p>
+                        <AdminIndexLayout/>
                     ) : (
                         <p>You are not authorized</p>
                     ) }

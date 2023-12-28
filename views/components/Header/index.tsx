@@ -4,9 +4,19 @@ import { useState } from 'react'
 import { Menu } from '@headlessui/react'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faChevronDown } from '@fortawesome/free-solid-svg-icons'
+import { link } from 'fs'
 
-const Header = () => {
+interface HeaderProps {
+    role: string
+}
+
+const Header = ({ role }: HeaderProps) => {
   const [isOpen, setIsOpen] = useState(false);
+
+  const navigation = [
+    { href: '/dashboard', name: 'Beranda', role: ['Superadmin', 'Admin'] },
+    { href: '/dashboard/company-profile', name: 'Profil KBIHU', role: ['Admin'] }
+  ]
 
   const handleLogout = () => {
     localStorage.removeItem('token');
@@ -23,9 +33,19 @@ const Header = () => {
                     </div>
                     <div className="hidden md:block">
                         <div className="flex items-baseline space-x-4">
-                            <Link className="cursor-pointer text-grayscale-700 font-light px-3 py-2 text-md hover:text-grayscale-800" href="/">
-                                Beranda
-                            </Link>
+                            {navigation.map((link, index) => {
+                                if(link.role.includes(role)) {
+                                    return (
+                                        <Link
+                                            key={index}
+                                            className="cursor-pointer text-grayscale-700 font-light px-3 py-2 text-md hover:text-grayscale-800"
+                                            href={link.href}>
+                                            {link.name}
+                                        </Link>
+                                    );
+                                }
+                                return null
+                            })}
                         </div>
                     </div>
                     <div className="hidden md:block">
@@ -86,13 +106,23 @@ const Header = () => {
         >
             <div className="md:hidden id=mobile-menu">
                 <div className="bg-white px-2 pt-2 pb-3 space-y-1 sm:px-3">
-                    <Link className="cursor-pointer text-grayscale-700 font-light px-3 py-2 text-md hover:text-grayscale-500 block" href="/">
-                        Beranda
-                    </Link>
+                    {navigation.map((link, index) => {
+                        if(link.role.includes(role)) {
+                            return (
+                                <Link
+                                    key={index}
+                                    className="cursor-pointer text-grayscale-700 font-light px-3 py-2 text-md hover:text-grayscale-500 block"
+                                    href={link.href}>
+                                    {link.name}
+                                </Link>
+                            );
+                        }
+                        return null
+                    })}
                     <div className="flex items items-center px-3 py-2 justify-between w-full gap-4">
-                        <Link className="cursor-pointer text-primary-500 font-light px-4 py-1.5 rounded-md text-md hover:text-primary-600 border border-primary-500 w-full justify-center inline-block text-center" href="/login">
-                            Login
-                        </Link>
+                        <button className="cursor-pointer text-primary-500 font-light px-4 py-1.5 rounded-md text-md hover:text-primary-600 border border-primary-500 w-full justify-center inline-block text-center" onClick={() => handleLogout()}>
+                            Logout
+                        </button>
                     </div>
                 </div>
             </div>
