@@ -223,25 +223,41 @@ model user_payment {
 }
 
 model user_profile {
-  id              String              @id @db.VarChar(36)
-  user_account_id String              @db.VarChar(36)
-  name            String              @db.VarChar(128)
-  gender          user_profile_gender @default(Male)
-  profile_picture String              @db.VarChar(48)
-  street          String?             @db.VarChar(128)
-  district        String?             @db.VarChar(64)
-  subdistrict     String?             @db.VarChar(64)
-  city            String?             @db.VarChar(64)
-  province        String?             @db.VarChar(64)
-  postal_code     Int?
-  birth_place     String?             @db.VarChar(64)
-  birth_date      DateTime?           @db.Date
-  passport_id     String?             @db.VarChar(32)
-  identity_id     Int?
-  created_at      DateTime            @default(now()) @db.DateTime(0)
-  updated_at      DateTime            @default(now()) @db.DateTime(0)
-  deleted_at      DateTime?           @db.DateTime(0)
-  user_account    user_account        @relation(fields: [user_account_id], references: [id], onUpdate: Restrict, map: "user_profile_ibfk_1")
+  id                    String       @id @db.VarChar(36)
+  user_account_id       String       @db.VarChar(36)
+  departure_year        Int
+  reg_number            String?      @db.VarChar(32)
+  portion_number        String       @db.VarChar(32)
+  bank                  String       @db.VarChar(32)
+  bank_branch           String?      @db.VarChar(32)
+  name                  String       @db.VarChar(128)
+  nasab_name            String       @db.VarChar(128)
+  gender                String       @db.VarChar(16)
+  marital_status        String?      @db.VarChar(16)
+  blood_type            String?      @db.VarChar(3)
+  pob                   String       @db.VarChar(64)
+  dob                   DateTime     @db.Date
+  street                String       @db.VarChar(128)
+  postal_code           Int
+  subdistrict           String       @db.VarChar(64)
+  district              String       @db.VarChar(64)
+  city                  String       @db.VarChar(64)
+  province              String       @db.VarChar(64)
+  education             String?      @db.VarChar(32)
+  job                   String?      @db.VarChar(64)
+  passport_number       String       @db.VarChar(16)
+  passport_name         String       @db.VarChar(128)
+  passport_pob          String       @db.VarChar(64)
+  passport_dob          DateTime     @db.Date
+  passport_issue_date   DateTime     @db.Date
+  passport_expiry_date  DateTime     @db.Date
+  passport_issue_office String       @db.VarChar(64)
+  passport_endorsement  String?      @db.VarChar(128)
+  identity_number       String       @db.VarChar(16)
+  created_at            DateTime     @default(now()) @db.DateTime(0)
+  updated_at            DateTime     @default(now()) @db.DateTime(0)
+  deleted_at            DateTime?    @db.DateTime(0)
+  user_account          user_account @relation(fields: [user_account_id], references: [id], onUpdate: Restrict, map: "user_profile_ibfk_1")
 
   @@index([user_account_id], map: "user_account_id")
 }
@@ -251,11 +267,6 @@ enum registration_status {
   Rejected
   Processed
   Registered
-}
-
-enum user_profile_gender {
-  Male
-  Female
 }
 
 enum user_account_role {
