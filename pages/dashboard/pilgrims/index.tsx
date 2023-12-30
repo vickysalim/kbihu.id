@@ -10,6 +10,7 @@ import { multipleDataInclude } from '@/lib/data/include'
 
 const DashboardPilgrims: React.FC = () => {
     const [isAuth, setIsAuth] = useState(false)
+    const [loading, setLoading] = useState(true)
 
     const [user, setUser] = useState({
         id: null,
@@ -86,6 +87,7 @@ const DashboardPilgrims: React.FC = () => {
         try {
             await axios.get(`/api/pilgrims/getAll/${user.company_id}`).then((res) => {
                 setPilgrims(res.data.data)
+                setLoading(false)
             })
         } catch (error) {
             console.log(error)
@@ -97,7 +99,7 @@ const DashboardPilgrims: React.FC = () => {
             name: 'Aksi',
             cell: (row: any) => {
                 return (
-                    <button className="bg-blue-500 text-white active:bg-blue-600 font-bold uppercase text-xs px-4 py-2 rounded shadow outline-none focus:outline-none mr-1 mb-1" onClick={(e) => alert(`ID Pengguna: ${row.id}`)}>
+                    <button className="bg-blue-500 text-white active:bg-blue-600 font-bold uppercase text-xs px-4 py-2 rounded shadow outline-none focus:outline-none mr-1 mb-1" onClick={(e) => window.location.href = `pilgrims/${row.id}`}>
                         <FontAwesomeIcon icon={faEye} />
                         <span className='ml-1'>Detail</span>
                     </button>
@@ -248,7 +250,8 @@ const DashboardPilgrims: React.FC = () => {
 
     const tableStyle: {} = dataTableStyle
     
-    if(isAuth) return (
+    if(loading || !isAuth) return <Loader />
+    return (
         <DashboardLayout pageName='Jemaah Haji' role={user.role}>
 
             <button className="bg-blue-500 text-white active:bg-blue-600 font-bold uppercase text-xs px-4 py-2 rounded shadow outline-none focus:outline-none">
@@ -271,8 +274,6 @@ const DashboardPilgrims: React.FC = () => {
                 ) : ('') }
             </div>
         </DashboardLayout>
-    ); else return (
-        <Loader />
     )
 }
 
