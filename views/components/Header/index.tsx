@@ -25,7 +25,7 @@ const Header = ({ role }: HeaderProps) => {
   }
 
   return (
-    <nav className="bg-white border-b border-grayscale-200 sticky top-0 z-50">
+    <nav className="bg-white border-b border-grayscale-200 sticky top-0 z-50 py-2">
         <div className="max-w-screen-xl mx-auto">
             <div className="flex items-center h-16 w-full">
                 <div className="flex items items-center mx-4 xl:mx-0 justify-between w-full">
