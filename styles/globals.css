@@ -13,4 +13,8 @@
       scrollbar-width: none; /* Firefox */
     }
 
+    .h-min-content {
+      height: min-content;
+    }
+
 }
