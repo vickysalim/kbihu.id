@@ -7,6 +7,7 @@ import { useEffect, useMemo, useState } from 'react'
 import DataTable from "react-data-table-component"
 import { dataTableStyle } from '@/lib/dataTable/style'
 import { multipleDataInclude } from '@/lib/data/include'
+import { formatDate } from '@/lib/date/format'
 
 const DashboardPilgrims: React.FC = () => {
     const [isAuth, setIsAuth] = useState(false)
@@ -158,7 +159,7 @@ const DashboardPilgrims: React.FC = () => {
         {
             name: 'Tanggal Lahir',
             cell: (row: any) => {
-                return new Date(row.user_profile.dob).toLocaleDateString('id-ID', { year: 'numeric', month: 'long', day: 'numeric' })
+                return formatDate(row.user_profile.dob)
             },
             width: '150px',
             sortable: true,
@@ -198,7 +199,7 @@ const DashboardPilgrims: React.FC = () => {
         {
             name: 'Tanggal Lahir Paspor',
             cell: (row) => {
-                return new Date(row.user_profile.passport_dob).toLocaleDateString('id-ID', { year: 'numeric', month: 'long', day: 'numeric' })
+                return formatDate(row.user_profile.passport_dob)
             },
             width: '175px',
             sortable: true,
@@ -206,7 +207,7 @@ const DashboardPilgrims: React.FC = () => {
         {
             name: 'Tanggal Penerbitan Paspor',
             cell: (row) => {
-                return new Date(row.user_profile.passport_issue_date).toLocaleDateString('id-ID', { year: 'numeric', month: 'long', day: 'numeric' })
+                return formatDate(row.user_profile.passport_issue_date)
             },
             width: '225px',
             sortable: true,
@@ -214,7 +215,7 @@ const DashboardPilgrims: React.FC = () => {
         {
             name: 'Tanggal Berakhir Paspor',
             cell: (row) => {
-                return new Date(row.user_profile.passport_expiry_date).toLocaleDateString('id-ID', { year: 'numeric', month: 'long', day: 'numeric' })
+                return formatDate(row.user_profile.passport_expiry_date)
             },
             width: '200px',
             sortable: true,
