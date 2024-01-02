@@ -133,6 +133,14 @@ const DashboardPilgrims: React.FC = () => {
             sortable: true,
         },
         {
+            name: 'Tahun Keberangkatan',
+            cell: (row: any) => {
+                return row.user_profile.departure_year
+            },
+            width: '200px',
+            sortable: true,
+        },
+        {
             name: 'Bank',
             cell: (row: any) => {
                 return row.user_profile.bank
@@ -260,14 +268,14 @@ const DashboardPilgrims: React.FC = () => {
                 <span className='ml-1'>Tambah Jemaah Haji Baru</span>
             </button>
             <div className="w-full mx-auto py-5">
-                <input type="text" value={searchPilgrims} onChange={(e) => setSearchPilgrims(e.target.value)} placeholder='Cari Nama, No. Porsi, No. KTP, atau No. Paspor' className='w-1/4 rounded-lg border border-gray-300 p-2 focus:outline-none focus:border-blue-500 mb-2'/>
+                <input type="text" value={searchPilgrims} onChange={(e) => setSearchPilgrims(e.target.value)} placeholder='Cari Nama, No. Porsi, NIK, No. Paspor, atau Tahun Keberangkatan' className='w-full lg:w-2/5 rounded-lg border border-gray-300 p-2 focus:outline-none focus:border-blue-500 mb-2'/>
 
                 { pilgrims.length > 0 ? (
                     <DataTable
                         columns={columns}
                         data={pilgrims.filter((item) => {
                             if(searchPilgrims === '') return item
-                            else if(multipleDataInclude([item.user_profile.name, item.user_profile.nasab_name, item.user_profile.portion_number, item.user_profile.passport_number, item.user_profile.identity_number], searchPilgrims)) return item
+                            else if(multipleDataInclude([item.user_profile.name, item.user_profile.nasab_name, item.user_profile.portion_number, item.user_profile.passport_number, item.user_profile.identity_number, item.user_profile.departure_year], searchPilgrims)) return item
                         })}
                         pagination={true}
                         customStyles={tableStyle}
