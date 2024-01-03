@@ -533,10 +533,13 @@ const DashboardPilgrimsDetail: React.FC = () => {
                     </div>
 
                     { /* Button Submit */ }
-                    <div className='flex flex-row-reverse'>
+                    <div className='flex flex-row-reverse gap-4'>
                         <button className="bg-blue-500 text-white active:bg-blue-600 font-bold uppercase text-xs px-4 py-2 rounded shadow outline-none focus:outline-none">
                             <FontAwesomeIcon icon={faFloppyDisk} />
                             <span className='ml-2'>Simpan</span>
+                        </button>
+                        <button type='button' className='text-blue-500 active:text-blue-600 font-bold uppercase text-xs outline-none focus:outline-none' onClick={() => window.location.href = '/dashboard/pilgrims'}>
+                            Kembali
                         </button>
                     </div>
                 </div>
