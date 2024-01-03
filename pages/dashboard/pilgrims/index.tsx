@@ -263,7 +263,7 @@ const DashboardPilgrims: React.FC = () => {
     return (
         <DashboardLayout pageName='Jemaah Haji' role={user.role}>
 
-            <button className="bg-blue-500 text-white active:bg-blue-600 font-bold uppercase text-xs px-4 py-2 rounded shadow outline-none focus:outline-none">
+            <button className="bg-blue-500 text-white active:bg-blue-600 font-bold uppercase text-xs px-4 py-2 rounded shadow outline-none focus:outline-none" onClick={() => window.location.href = 'pilgrims/add'}>
                 <FontAwesomeIcon icon={faPlus} />
                 <span className='ml-1'>Tambah Jemaah Haji Baru</span>
             </button>
