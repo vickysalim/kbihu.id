@@ -181,7 +181,7 @@ const DashboardPilgrimsDetail: React.FC = () => {
                                     id='name'
                                     value={pilgrim.user_profile.reg_number}
                                     disabled={true}
-                                    className='w-full rounded-lg border border-gray-300 p-2 focus:outline-none focus:border-blue-500'
+                                    className='w-full rounded-lg border border-gray-300 p-2 focus:outline-none focus:border-blue-500 disabled:bg-gray-100'
                                 />
                             </div>
                             <div className="mb-2">
@@ -191,7 +191,7 @@ const DashboardPilgrimsDetail: React.FC = () => {
                                     id='name'
                                     value={pilgrim.user_profile.portion_number}
                                     disabled={true}
-                                    className='w-full rounded-lg border border-gray-300 p-2 focus:outline-none focus:border-blue-500'
+                                    className='w-full rounded-lg border border-gray-300 p-2 focus:outline-none focus:border-blue-500 disabled:bg-gray-100'
                                 />
                             </div>
                             <div className="mb-2">
@@ -201,7 +201,7 @@ const DashboardPilgrimsDetail: React.FC = () => {
                                     id='name'
                                     value={pilgrim.user_profile.bank}
                                     disabled={true}
-                                    className='w-full rounded-lg border border-gray-300 p-2 focus:outline-none focus:border-blue-500'
+                                    className='w-full rounded-lg border border-gray-300 p-2 focus:outline-none focus:border-blue-500 disabled:bg-gray-100'
                                 />
                             </div>
                             <div className="mb-2">
@@ -211,7 +211,7 @@ const DashboardPilgrimsDetail: React.FC = () => {
                                     id='name'
                                     value={pilgrim.user_profile.bank_branch}
                                     disabled={true}
-                                    className='w-full rounded-lg border border-gray-300 p-2 focus:outline-none focus:border-blue-500'
+                                    className='w-full rounded-lg border border-gray-300 p-2 focus:outline-none focus:border-blue-500 disabled:bg-gray-100'
                                 />
                             </div>
                         </div>
@@ -373,6 +373,33 @@ const DashboardPilgrimsDetail: React.FC = () => {
                                 />
                             </div>
                             <div className="mb-2">
+                                <label htmlFor='name' className='text-sm font-semibold text-gray-500'>Jenis Kelamin</label>
+                                    <div className='flex flex-row gap-6'>
+                                        <label htmlFor='male' className='flex items-center gap-x-1'>
+                                            <input
+                                                className='h-4 w-4 border-gray-300 text-blue-500 focus:text-blue-500 ring-transparent focus:ring-transparent'
+                                                type='radio'
+                                                id='male'
+                                                value='Laki-laki'
+                                                checked={pilgrim.user_profile.gender === 'Laki-laki'}
+                                                onChange={(e) => setPilgrim({...pilgrim, user_profile: {...pilgrim.user_profile, gender: e.target.value}})}
+                                            />
+                                            <span>Laki-laki</span>
+                                        </label>
+                                        <label htmlFor='female' className='flex items-center gap-x-1'>
+                                            <input
+                                                className='h-4 w-4 border-gray-300 text-blue-500 focus:text-blue-500 ring-transparent focus:ring-transparent'
+                                                type='radio'
+                                                id='female'
+                                                value='Perempuan'
+                                                checked={pilgrim.user_profile.gender === 'Perempuan'}
+                                                onChange={(e) => setPilgrim({...pilgrim, user_profile: {...pilgrim.user_profile, gender: e.target.value}})}
+                                            />
+                                            <span>Perempuan</span>
+                                        </label>
+                                    </div>                                
+                            </div>
+                            <div className="mb-2">
                                 <label htmlFor='name' className='text-sm font-semibold text-gray-500'>Status Perkawinan</label>
                                 <input
                                     type='text'
@@ -508,7 +535,7 @@ const DashboardPilgrimsDetail: React.FC = () => {
                                     id='name'
                                     value={pilgrim.user_profile.portion_number}
                                     disabled={true}
-                                    className='w-full rounded-lg border border-gray-300 p-2 focus:outline-none focus:border-blue-500'
+                                    className='w-full rounded-lg border border-gray-300 p-2 focus:outline-none focus:border-blue-500 disabled:bg-gray-100'
                                 />
                             </div>
                             <div className="mb-2">
@@ -519,13 +546,12 @@ const DashboardPilgrimsDetail: React.FC = () => {
                                         id='name'
                                         value={dateToPass(pilgrim.user_profile.dob)}
                                         disabled={true}
-                                        className='w-full rounded-lg border border-gray-300 p-2 focus:outline-none focus:border-blue-500'
+                                        className='w-full rounded-lg border border-gray-300 p-2 focus:outline-none focus:border-blue-500 disabled:bg-gray-100'
                                     />
                                     <button type='button' className="absolute top-2 bottom-2 right-3 text-blue-500 font-bold uppercase text-xs outline-none focus:outline-none px-3" onClick={() => setHidePassword(!hidePassword)}>
                                         { hidePassword ?
                                             <FontAwesomeIcon icon={faEye}/> :
                                             <FontAwesomeIcon icon={faEyeSlash}/> }
-                                        
                                     </button>
                                 </div>
                             </div>
