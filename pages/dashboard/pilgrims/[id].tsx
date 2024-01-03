@@ -175,40 +175,40 @@ const DashboardPilgrimsDetail: React.FC = () => {
                         </div>
                         <div className='px-4 pt-3 pb-2'>
                             <div className="mb-2">
-                                <label htmlFor='name' className='text-sm font-semibold text-gray-500'>Nomor SPPH</label>
+                                <label htmlFor='reg_number' className='text-sm font-semibold text-gray-500'>Nomor SPPH</label>
                                 <input
                                     type='text'
-                                    id='name'
+                                    id='reg_number'
                                     value={pilgrim.user_profile.reg_number}
                                     disabled={true}
                                     className='w-full rounded-lg border border-gray-300 p-2 focus:outline-none focus:border-blue-500 disabled:bg-gray-100'
                                 />
                             </div>
                             <div className="mb-2">
-                                <label htmlFor='name' className='text-sm font-semibold text-gray-500'>Nomor Porsi</label>
+                                <label htmlFor='portion_number' className='text-sm font-semibold text-gray-500'>Nomor Porsi</label>
                                 <input
                                     type='text'
-                                    id='name'
+                                    id='portion_number'
                                     value={pilgrim.user_profile.portion_number}
                                     disabled={true}
                                     className='w-full rounded-lg border border-gray-300 p-2 focus:outline-none focus:border-blue-500 disabled:bg-gray-100'
                                 />
                             </div>
                             <div className="mb-2">
-                                <label htmlFor='name' className='text-sm font-semibold text-gray-500'>Bank</label>
+                                <label htmlFor='bank' className='text-sm font-semibold text-gray-500'>Bank</label>
                                 <input
                                     type='text'
-                                    id='name'
+                                    id='bank'
                                     value={pilgrim.user_profile.bank}
                                     disabled={true}
                                     className='w-full rounded-lg border border-gray-300 p-2 focus:outline-none focus:border-blue-500 disabled:bg-gray-100'
                                 />
                             </div>
                             <div className="mb-2">
-                                <label htmlFor='name' className='text-sm font-semibold text-gray-500'>Kantor Cabang Bank</label>
+                                <label htmlFor='bank_branch' className='text-sm font-semibold text-gray-500'>Kantor Cabang Bank</label>
                                 <input
                                     type='text'
-                                    id='name'
+                                    id='bank_branch'
                                     value={pilgrim.user_profile.bank_branch}
                                     disabled={true}
                                     className='w-full rounded-lg border border-gray-300 p-2 focus:outline-none focus:border-blue-500 disabled:bg-gray-100'
@@ -224,80 +224,80 @@ const DashboardPilgrimsDetail: React.FC = () => {
                         </div>
                         <div className='px-4 pt-3 pb-2'>
                             <div className="mb-2">
-                                <label htmlFor='name' className='text-sm font-semibold text-gray-500'>Nomor Paspor</label>
+                                <label htmlFor='passport_number' className='text-sm font-semibold text-gray-500'>Nomor Paspor</label>
                                 <input
                                     type='text'
-                                    id='name'
+                                    id='passport_number'
                                     value={pilgrim.user_profile.passport_number}
                                     onChange={(e) => setPilgrim({...pilgrim, user_profile: {...pilgrim.user_profile, passport_number: e.target.value}})}
                                     className='w-full rounded-lg border border-gray-300 p-2 focus:outline-none focus:border-blue-500'
                                 />
                             </div>
                             <div className="mb-2">
-                                <label htmlFor='name' className='text-sm font-semibold text-gray-500'>Nama Paspor</label>
+                                <label htmlFor='passport_name' className='text-sm font-semibold text-gray-500'>Nama Paspor</label>
                                 <input
                                     type='text'
-                                    id='name'
+                                    id='passport_name'
                                     value={pilgrim.user_profile.passport_name}
                                     onChange={(e) => setPilgrim({...pilgrim, user_profile: {...pilgrim.user_profile, passport_name: e.target.value}})}
                                     className='w-full rounded-lg border border-gray-300 p-2 focus:outline-none focus:border-blue-500'
                                 />
                             </div>
                             <div className="mb-2">
-                                <label htmlFor='name' className='text-sm font-semibold text-gray-500'>Tempat Lahir Paspor</label>
+                                <label htmlFor='passport_pob' className='text-sm font-semibold text-gray-500'>Tempat Lahir Paspor</label>
                                 <input
                                     type='text'
-                                    id='name'
+                                    id='passport_pob'
                                     value={pilgrim.user_profile.passport_pob}
                                     onChange={(e) => setPilgrim({...pilgrim, user_profile: {...pilgrim.user_profile, passport_pob: e.target.value}})}
                                     className='w-full rounded-lg border border-gray-300 p-2 focus:outline-none focus:border-blue-500'
                                 />
                             </div>
                             <div className="mb-2">
-                                <label htmlFor='name' className='text-sm font-semibold text-gray-500'>Tanggal Lahir Paspor</label>
+                                <label htmlFor='passport_dob' className='text-sm font-semibold text-gray-500'>Tanggal Lahir Paspor</label>
                                 <input
                                     type='date'
-                                    id='name'
+                                    id='passport_dob'
                                     value={formatDateInput(pilgrim.user_profile.passport_dob)}
                                     onChange={(e) => setPilgrim({...pilgrim, user_profile: {...pilgrim.user_profile, passport_dob: e.target.value}})}
                                     className='w-full rounded-lg border border-gray-300 p-2 focus:outline-none focus:border-blue-500'
                                 />
                             </div>
                             <div className="mb-2">
-                                <label htmlFor='name' className='text-sm font-semibold text-gray-500'>Tanggal Penerbitan Paspor</label>
+                                <label htmlFor='passport_issue_date' className='text-sm font-semibold text-gray-500'>Tanggal Penerbitan Paspor</label>
                                 <input
                                     type='date'
-                                    id='name'
+                                    id='passport_issue_date'
                                     value={formatDateInput(pilgrim.user_profile.passport_issue_date)}
                                     onChange={(e) => setPilgrim({...pilgrim, user_profile: {...pilgrim.user_profile, passport_issue_date: e.target.value}})}
                                     className='w-full rounded-lg border border-gray-300 p-2 focus:outline-none focus:border-blue-500'
                                 />
                             </div>
                             <div className="mb-2">
-                                <label htmlFor='name' className='text-sm font-semibold text-gray-500'>Tanggal Berakhir Paspor</label>
+                                <label htmlFor='passport_expiry_date' className='text-sm font-semibold text-gray-500'>Tanggal Berakhir Paspor</label>
                                 <input
                                     type='date'
-                                    id='name'
+                                    id='passport_expiry_date'
                                     value={formatDateInput(pilgrim.user_profile.passport_expiry_date)}
                                     onChange={(e) => setPilgrim({...pilgrim, user_profile: {...pilgrim.user_profile, passport_expiry_date: e.target.value}})}
                                     className='w-full rounded-lg border border-gray-300 p-2 focus:outline-none focus:border-blue-500'
                                 />
                             </div>
                             <div className="mb-2">
-                                <label htmlFor='name' className='text-sm font-semibold text-gray-500'>Kantor Penerbit Paspor</label>
+                                <label htmlFor='passport_issue_office' className='text-sm font-semibold text-gray-500'>Kantor Penerbit Paspor</label>
                                 <input
                                     type='text'
-                                    id='name'
+                                    id='passport_issue_office'
                                     value={pilgrim.user_profile.passport_issue_office}
                                     onChange={(e) => setPilgrim({...pilgrim, user_profile: {...pilgrim.user_profile, passport_issue_office: e.target.value}})}
                                     className='w-full rounded-lg border border-gray-300 p-2 focus:outline-none focus:border-blue-500'
                                 />
                             </div>
                             <div className="mb-2">
-                                <label htmlFor='name' className='text-sm font-semibold text-gray-500'>Nama Endorsement</label>
+                                <label htmlFor='passport_endorsement' className='text-sm font-semibold text-gray-500'>Nama Endorsement</label>
                                 <input
                                     type='text'
-                                    id='name'
+                                    id='passport_endorsement'
                                     value={pilgrim.user_profile.passport_endorsement}
                                     onChange={(e) => setPilgrim({...pilgrim, user_profile: {...pilgrim.user_profile, passport_endorsement: e.target.value}})}
                                     className='w-full rounded-lg border border-gray-300 p-2 focus:outline-none focus:border-blue-500'
@@ -313,30 +313,30 @@ const DashboardPilgrimsDetail: React.FC = () => {
                         </div>
                         <div className='px-4 pt-3 pb-2'>
                             <div className="mb-2">
-                                <label htmlFor='name' className='text-sm font-semibold text-gray-500'>Nomor KTP</label>
+                                <label htmlFor='identity_number' className='text-sm font-semibold text-gray-500'>Nomor KTP</label>
                                 <input
                                     type='text'
-                                    id='name'
+                                    id='identity_number'
                                     value={pilgrim.user_profile.identity_number}
                                     onChange={(e) => setPilgrim({...pilgrim, user_profile: {...pilgrim.user_profile, identity_number: e.target.value}})}
                                     className='w-full rounded-lg border border-gray-300 p-2 focus:outline-none focus:border-blue-500'
                                 />
                             </div>
                             <div className="mb-2">
-                                <label htmlFor='name' className='text-sm font-semibold text-gray-500'>Tahun Keberangkatan</label>
+                                <label htmlFor='departure_year' className='text-sm font-semibold text-gray-500'>Tahun Keberangkatan</label>
                                 <input
                                     type='text'
-                                    id='name'
+                                    id='departure_year'
                                     value={pilgrim.user_profile.departure_year}
                                     onChange={(e) => setPilgrim({...pilgrim, user_profile: {...pilgrim.user_profile, departure_year: e.target.value}})}
                                     className='w-full rounded-lg border border-gray-300 p-2 focus:outline-none focus:border-blue-500'
                                 />
                             </div>
                             <div className="mb-2">
-                                <label htmlFor='name' className='text-sm font-semibold text-gray-500'>Nomor Telepon</label>
+                                <label htmlFor='phone_number' className='text-sm font-semibold text-gray-500'>Nomor Telepon</label>
                                 <input
                                     type='text'
-                                    id='name'
+                                    id='phone_number'
                                     value={pilgrim.phone_number}
                                     onChange={(e) => setPilgrim({...pilgrim, phone_number: e.target.value})}
                                     className='w-full rounded-lg border border-gray-300 p-2 focus:outline-none focus:border-blue-500'
@@ -363,157 +363,157 @@ const DashboardPilgrimsDetail: React.FC = () => {
                                 />
                             </div>
                             <div className="mb-2">
-                                <label htmlFor='name' className='text-sm font-semibold text-gray-500'>{pilgrim.user_profile.gender == 'Laki-laki' ? 'Bin' : 'Binti'}</label>
+                                <label htmlFor='nasab_name' className='text-sm font-semibold text-gray-500'>{pilgrim.user_profile.gender == 'Laki-laki' ? 'Bin' : 'Binti'}</label>
                                 <input
                                     type='text'
-                                    id='name'
+                                    id='nasab_name'
                                     value={pilgrim.user_profile.nasab_name}
                                     onChange={(e) => setPilgrim({...pilgrim, user_profile: {...pilgrim.user_profile, nasab_name: e.target.value}})}
                                     className='w-full rounded-lg border border-gray-300 p-2 focus:outline-none focus:border-blue-500'
                                 />
                             </div>
                             <div className="mb-2">
-                                <label htmlFor='name' className='text-sm font-semibold text-gray-500'>Jenis Kelamin</label>
-                                    <div className='flex flex-row gap-6'>
-                                        <label htmlFor='male' className='flex items-center gap-x-1'>
-                                            <input
-                                                className='h-4 w-4 border-gray-300 text-blue-500 focus:text-blue-500 ring-transparent focus:ring-transparent'
-                                                type='radio'
-                                                id='male'
-                                                value='Laki-laki'
-                                                checked={pilgrim.user_profile.gender === 'Laki-laki'}
-                                                onChange={(e) => setPilgrim({...pilgrim, user_profile: {...pilgrim.user_profile, gender: e.target.value}})}
-                                            />
-                                            <span>Laki-laki</span>
-                                        </label>
-                                        <label htmlFor='female' className='flex items-center gap-x-1'>
-                                            <input
-                                                className='h-4 w-4 border-gray-300 text-blue-500 focus:text-blue-500 ring-transparent focus:ring-transparent'
-                                                type='radio'
-                                                id='female'
-                                                value='Perempuan'
-                                                checked={pilgrim.user_profile.gender === 'Perempuan'}
-                                                onChange={(e) => setPilgrim({...pilgrim, user_profile: {...pilgrim.user_profile, gender: e.target.value}})}
-                                            />
-                                            <span>Perempuan</span>
-                                        </label>
-                                    </div>                                
+                                <label htmlFor='gender' className='text-sm font-semibold text-gray-500'>Jenis Kelamin</label>
+                                <div className='flex flex-row gap-6'>
+                                    <label htmlFor='male' className='flex items-center gap-x-1'>
+                                        <input
+                                            className='h-4 w-4 border-gray-300 text-blue-500 focus:text-blue-500 ring-transparent focus:ring-transparent'
+                                            type='radio'
+                                            id='male'
+                                            value='Laki-laki'
+                                            checked={pilgrim.user_profile.gender === 'Laki-laki'}
+                                            onChange={(e) => setPilgrim({...pilgrim, user_profile: {...pilgrim.user_profile, gender: e.target.value}})}
+                                        />
+                                        <span>Laki-laki</span>
+                                    </label>
+                                    <label htmlFor='female' className='flex items-center gap-x-1'>
+                                        <input
+                                            className='h-4 w-4 border-gray-300 text-blue-500 focus:text-blue-500 ring-transparent focus:ring-transparent'
+                                            type='radio'
+                                            id='female'
+                                            value='Perempuan'
+                                            checked={pilgrim.user_profile.gender === 'Perempuan'}
+                                            onChange={(e) => setPilgrim({...pilgrim, user_profile: {...pilgrim.user_profile, gender: e.target.value}})}
+                                        />
+                                        <span>Perempuan</span>
+                                    </label>
+                                </div>                                
                             </div>
                             <div className="mb-2">
-                                <label htmlFor='name' className='text-sm font-semibold text-gray-500'>Status Perkawinan</label>
+                                <label htmlFor='marital_status' className='text-sm font-semibold text-gray-500'>Status Perkawinan</label>
                                 <input
                                     type='text'
-                                    id='name'
+                                    id='marital_status'
                                     value={pilgrim.user_profile.marital_status}
                                     onChange={(e) => setPilgrim({...pilgrim, user_profile: {...pilgrim.user_profile, marital_status: e.target.value}})}
                                     className='w-full rounded-lg border border-gray-300 p-2 focus:outline-none focus:border-blue-500'
                                 />
                             </div>
                             <div className="mb-2">
-                                <label htmlFor='name' className='text-sm font-semibold text-gray-500'>Golongan Darah</label>
+                                <label htmlFor='blood_type' className='text-sm font-semibold text-gray-500'>Golongan Darah</label>
                                 <input
                                     type='text'
-                                    id='name'
+                                    id='blood_type'
                                     value={pilgrim.user_profile.blood_type}
                                     onChange={(e) => setPilgrim({...pilgrim, user_profile: {...pilgrim.user_profile, blood_type: e.target.value}})}
                                     className='w-full rounded-lg border border-gray-300 p-2 focus:outline-none focus:border-blue-500'
                                 />
                             </div>
                             <div className="mb-2">
-                                <label htmlFor='name' className='text-sm font-semibold text-gray-500'>Tempat Lahir</label>
+                                <label htmlFor='pob' className='text-sm font-semibold text-gray-500'>Tempat Lahir</label>
                                 <input
                                     type='text'
-                                    id='name'
+                                    id='pob'
                                     value={pilgrim.user_profile.pob}
                                     onChange={(e) => setPilgrim({...pilgrim, user_profile: {...pilgrim.user_profile, pob: e.target.value}})}
                                     className='w-full rounded-lg border border-gray-300 p-2 focus:outline-none focus:border-blue-500'
                                 />
                             </div>
                             <div className="mb-2">
-                                <label htmlFor='name' className='text-sm font-semibold text-gray-500'>Tanggal Lahir</label>
+                                <label htmlFor='dob' className='text-sm font-semibold text-gray-500'>Tanggal Lahir</label>
                                 <input
                                     type='date'
-                                    id='name'
+                                    id='dob'
                                     value={formatDateInput(pilgrim.user_profile.dob)}
                                     onChange={(e) => setPilgrim({...pilgrim, user_profile: {...pilgrim.user_profile, dob: e.target.value}})}
                                     className='w-full rounded-lg border border-gray-300 p-2 focus:outline-none focus:border-blue-500'
                                 />
                             </div>
                             <div className="mb-2">
-                                <label htmlFor='name' className='text-sm font-semibold text-gray-500'>Provinsi</label>
+                                <label htmlFor='province' className='text-sm font-semibold text-gray-500'>Provinsi</label>
                                 <input
                                     type='text'
-                                    id='name'
+                                    id='province'
                                     value={pilgrim.user_profile.province}
                                     onChange={(e) => setPilgrim({...pilgrim, user_profile: {...pilgrim.user_profile, province: e.target.value}})}
                                     className='w-full rounded-lg border border-gray-300 p-2 focus:outline-none focus:border-blue-500'
                                 />
                             </div>
                             <div className="mb-2">
-                                <label htmlFor='name' className='text-sm font-semibold text-gray-500'>Kabupaten / Kota Madya</label>
+                                <label htmlFor='city' className='text-sm font-semibold text-gray-500'>Kabupaten/Kota</label>
                                 <input
                                     type='text'
-                                    id='name'
+                                    id='city'
                                     value={pilgrim.user_profile.city}
                                     onChange={(e) => setPilgrim({...pilgrim, user_profile: {...pilgrim.user_profile, city: e.target.value}})}
                                     className='w-full rounded-lg border border-gray-300 p-2 focus:outline-none focus:border-blue-500'
                                 />
                             </div>
                             <div className="mb-2">
-                                <label htmlFor='name' className='text-sm font-semibold text-gray-500'>Kecamatan</label>
+                                <label htmlFor='district' className='text-sm font-semibold text-gray-500'>Kecamatan</label>
                                 <input
                                     type='text'
-                                    id='name'
+                                    id='district'
                                     value={pilgrim.user_profile.district}
                                     onChange={(e) => setPilgrim({...pilgrim, user_profile: {...pilgrim.user_profile, district: e.target.value}})}
                                     className='w-full rounded-lg border border-gray-300 p-2 focus:outline-none focus:border-blue-500'
                                 />
                             </div>
                             <div className="mb-2">
-                                <label htmlFor='name' className='text-sm font-semibold text-gray-500'>Desa / Kelurahan</label>
+                                <label htmlFor='subdistrict' className='text-sm font-semibold text-gray-500'>Desa/Kelurahan</label>
                                 <input
                                     type='text'
-                                    id='name'
+                                    id='subdistrict'
                                     value={pilgrim.user_profile.subdistrict}
                                     onChange={(e) => setPilgrim({...pilgrim, user_profile: {...pilgrim.user_profile, subdistrict: e.target.value}})}
                                     className='w-full rounded-lg border border-gray-300 p-2 focus:outline-none focus:border-blue-500'
                                 />
                             </div>
                             <div className="mb-2">
-                                <label htmlFor='name' className='text-sm font-semibold text-gray-500'>Alamat</label>
+                                <label htmlFor='street' className='text-sm font-semibold text-gray-500'>Alamat</label>
                                 <input
                                     type='text'
-                                    id='name'
+                                    id='street'
                                     value={pilgrim.user_profile.street}
                                     onChange={(e) => setPilgrim({...pilgrim, user_profile: {...pilgrim.user_profile, street: e.target.value}})}
                                     className='w-full rounded-lg border border-gray-300 p-2 focus:outline-none focus:border-blue-500'
                                 />
                             </div>
                             <div className="mb-2">
-                                <label htmlFor='name' className='text-sm font-semibold text-gray-500'>Kode Pos</label>
+                                <label htmlFor='postal_code' className='text-sm font-semibold text-gray-500'>Kode Pos</label>
                                 <input
                                     type='text'
-                                    id='name'
+                                    id='postal_code'
                                     value={pilgrim.user_profile.postal_code}
                                     onChange={(e) => setPilgrim({...pilgrim, user_profile: {...pilgrim.user_profile, postal_code: e.target.value}})}
                                     className='w-full rounded-lg border border-gray-300 p-2 focus:outline-none focus:border-blue-500'
                                 />
                             </div>
                             <div className="mb-2">
-                                <label htmlFor='name' className='text-sm font-semibold text-gray-500'>Pendidikan</label>
+                                <label htmlFor='education' className='text-sm font-semibold text-gray-500'>Pendidikan</label>
                                 <input
                                     type='text'
-                                    id='name'
+                                    id='education'
                                     value={pilgrim.user_profile.education}
                                     onChange={(e) => setPilgrim({...pilgrim, user_profile: {...pilgrim.user_profile, education: e.target.value}})}
                                     className='w-full rounded-lg border border-gray-300 p-2 focus:outline-none focus:border-blue-500'
                                 />
                             </div>
                             <div className="mb-2">
-                                <label htmlFor='name' className='text-sm font-semibold text-gray-500'>Pekerjaan</label>
+                                <label htmlFor='job' className='text-sm font-semibold text-gray-500'>Pekerjaan</label>
                                 <input
                                     type='text'
-                                    id='name'
+                                    id='job'
                                     value={pilgrim.user_profile.job}
                                     onChange={(e) => setPilgrim({...pilgrim, user_profile: {...pilgrim.user_profile, job: e.target.value}})}
                                     className='w-full rounded-lg border border-gray-300 p-2 focus:outline-none focus:border-blue-500'
@@ -529,21 +529,21 @@ const DashboardPilgrimsDetail: React.FC = () => {
                         </div>
                         <div className='px-4 pt-3 pb-2'>
                             <div className="mb-2">
-                                <label htmlFor='name' className='text-sm font-semibold text-gray-500'>ID Pengguna</label>
+                                <label htmlFor='username' className='text-sm font-semibold text-gray-500'>ID Pengguna</label>
                                 <input
                                     type='text'
-                                    id='name'
+                                    id='username'
                                     value={pilgrim.user_profile.portion_number}
                                     disabled={true}
                                     className='w-full rounded-lg border border-gray-300 p-2 focus:outline-none focus:border-blue-500 disabled:bg-gray-100'
                                 />
                             </div>
                             <div className="mb-2">
-                                <label htmlFor='name' className='text-sm font-semibold text-gray-500'>Kata Sandi</label>
+                                <label htmlFor='password' className='text-sm font-semibold text-gray-500'>Kata Sandi</label>
                                 <div className='relative'>
                                     <input
                                         type={hidePassword ? 'password' : 'text'}
-                                        id='name'
+                                        id='password'
                                         value={dateToPass(pilgrim.user_profile.dob)}
                                         disabled={true}
                                         className='w-full rounded-lg border border-gray-300 p-2 focus:outline-none focus:border-blue-500 disabled:bg-gray-100'
