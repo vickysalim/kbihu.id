@@ -122,7 +122,6 @@ const DashboardPilgrims: React.FC = () => {
                 )
             },
             width: '200px',
-            sortable: true,
         },
         {
             name: 'Nomor Porsi',
@@ -130,7 +129,6 @@ const DashboardPilgrims: React.FC = () => {
                 return row.user_profile.portion_number
             },
             width: '150px',
-            sortable: true,
         },
         {
             name: 'Tahun Keberangkatan',
@@ -138,7 +136,6 @@ const DashboardPilgrims: React.FC = () => {
                 return row.user_profile.departure_year
             },
             width: '200px',
-            sortable: true,
         },
         {
             name: 'Bank',
@@ -146,7 +143,6 @@ const DashboardPilgrims: React.FC = () => {
                 return row.user_profile.bank
             },
             width: '150px',
-            sortable: true,
         },
         {
             name: 'Jenis Kelamin',
@@ -154,7 +150,6 @@ const DashboardPilgrims: React.FC = () => {
                 return row.user_profile.gender
             },
             width: '150px',
-            sortable: true,
         },
         {
             name: 'Tempat Lahir',
@@ -162,7 +157,6 @@ const DashboardPilgrims: React.FC = () => {
                 return row.user_profile.pob
             },
             width: '150px',
-            sortable: true,
         },
         {
             name: 'Tanggal Lahir',
@@ -170,7 +164,6 @@ const DashboardPilgrims: React.FC = () => {
                 return formatDate(row.user_profile.dob)
             },
             width: '150px',
-            sortable: true,
         },
         {
             name: 'Alamat',
@@ -178,7 +171,6 @@ const DashboardPilgrims: React.FC = () => {
                 return row.user_profile.street.concat(", Kel. ", row.user_profile.subdistrict, ", Kec. ", row.user_profile.district, ", Kota ", row.user_profile.city, ", ", row.user_profile.province, ", ", row.user_profile.postal_code)
             },
             width: '300px',
-            sortable: true,
         },
         {
             name: 'Nomor Paspor',
@@ -186,7 +178,6 @@ const DashboardPilgrims: React.FC = () => {
                 return row.user_profile.passport_number
             },
             width: '150px',
-            sortable: true,
         },
         {
             name: 'Nama Paspor',
@@ -194,7 +185,6 @@ const DashboardPilgrims: React.FC = () => {
                 return row.user_profile.passport_name
             },
             width: '200px',
-            sortable: true,
         },
         {
             name: 'Tempat Lahir Paspor',
@@ -202,7 +192,6 @@ const DashboardPilgrims: React.FC = () => {
                 return row.user_profile.passport_pob
             },
             width: '175px',
-            sortable: true,
         },
         {
             name: 'Tanggal Lahir Paspor',
@@ -210,7 +199,6 @@ const DashboardPilgrims: React.FC = () => {
                 return formatDate(row.user_profile.passport_dob)
             },
             width: '175px',
-            sortable: true,
         },
         {
             name: 'Tanggal Penerbitan Paspor',
@@ -218,7 +206,6 @@ const DashboardPilgrims: React.FC = () => {
                 return formatDate(row.user_profile.passport_issue_date)
             },
             width: '225px',
-            sortable: true,
         },
         {
             name: 'Tanggal Berakhir Paspor',
@@ -226,7 +213,6 @@ const DashboardPilgrims: React.FC = () => {
                 return formatDate(row.user_profile.passport_expiry_date)
             },
             width: '200px',
-            sortable: true,
         },
         {
             name: 'Kantor Penerbit Paspor',
@@ -234,7 +220,6 @@ const DashboardPilgrims: React.FC = () => {
                 return row.user_profile.passport_issue_office
             },
             width: '200px',
-            sortable: true,
         },
         {
             name: 'Nomor KTP',
@@ -242,7 +227,6 @@ const DashboardPilgrims: React.FC = () => {
                 return row.user_profile.identity_number
             },
             width: '175px',
-            sortable: true,
         }
     ], [])
 
