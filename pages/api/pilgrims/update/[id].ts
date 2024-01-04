@@ -1,6 +1,8 @@
 import type { NextApiRequest, NextApiResponse } from 'next'
 import api from '@/lib/api'
 import prisma from '@/lib/prisma'
+import bcrypt from 'bcrypt'
+import { dateToPass } from '@/lib/date/format'
 
 export default async function handler(
     req: NextApiRequest,
@@ -33,13 +35,28 @@ export default async function handler(
 
         if(data.deleted_at) return api.null(res, data, `Jemaah`)
 
-        if(phone_number) {
+        if(dateToPass(new Date(dob).toISOString()) != dateToPass(profileData.dob.toISOString())) {
+            const dobParsed = dateToPass(new Date(dob).toISOString())
+            const newPassword = await bcrypt.hash(dobParsed, 10)
+
             await prisma.user_account.update({
                 where: {
                     id: req.query.id as string
                 },
                 data: {
-                    phone_number: phone_number
+                    phone_number: phone_number || data.phone_number,
+                    password: newPassword,
+                    updated_at: new Date()
+                }
+            })
+        } else {
+            await prisma.user_account.update({
+                where: {
+                    id: req.query.id as string
+                },
+                data: {
+                    phone_number: phone_number || data.phone_number,
+                    updated_at: new Date()
                 }
             })
         }
@@ -52,7 +69,7 @@ export default async function handler(
             data: {
                 departure_year: parseInt(departure_year) || profileData.departure_year,
                 reg_number: reg_number || null,
-                portion_number: portion_number || profileData.portion_number,
+                portion_number: profileData.portion_number,
                 bank: bank || profileData.bank,
                 bank_branch: bank_branch || null,
                 name: name || profileData.name,
