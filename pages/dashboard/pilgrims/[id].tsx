@@ -2,7 +2,7 @@ import { dateToPass, formatDateInput } from '@/lib/date/format'
 import Alert from '@/views/components/Alert'
 import Loader from '@/views/components/Loader'
 import DashboardLayout from '@/views/layouts/DashboardLayout'
-import { faEye, faEyeSlash, faFloppyDisk } from '@fortawesome/free-solid-svg-icons'
+import { faEye, faEyeSlash, faFloppyDisk, faTriangleExclamation } from '@fortawesome/free-solid-svg-icons'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import axios from 'axios'
 import { useRouter } from 'next/router'
@@ -86,13 +86,15 @@ const DashboardPilgrimsDetail: React.FC = () => {
     const router = useRouter()
 
     const pilgrimsData = async () => {
-        try {
-            await axios.get(`/api/pilgrims/get/${router.query.id}`).then((res) => {
-                setPilgrim(res.data.data)
-                setLoading(false)
-            })
-        } catch (error) {
-            console.log(error)
+        if(router.query.id != undefined) {
+            try {
+                await axios.get(`/api/pilgrims/get/${router.query.id}`).then((res) => {
+                    setPilgrim(res.data.data)
+                    setLoading(false)
+                })
+            } catch (error) {
+                console.log(error)
+            }
         }
     }
 
@@ -143,6 +145,29 @@ const DashboardPilgrimsDetail: React.FC = () => {
                 setMessage(`Error: ${fieldError}`)
             } else {
                 setMessage(`Unknown Error`)
+            }
+        }
+    }
+
+    const handleDelete = async () => {
+        if(confirm('Apakah anda yakin ingin menghapus data ini? Tindakan ini tidak dapat dibatalkan')) {
+            try {
+                await axios.delete('/api/pilgrims/delete', {
+                    data: {
+                        id: router.query.id
+                    }
+                }).then((res) => {
+                    setMessage(res.data.message)
+                    window.location.href = '/dashboard/pilgrims'
+                })
+            } catch (error: any) {
+                if(error.response) {
+                    if(error.response.data.message[0].message)
+                        setMessage(`Error: ${error.response.data.message[0].message}`)
+                    else setMessage(`Error: ${error.response.data.message}`)
+                } else {
+                    setMessage(`Unknown Error`)
+                }
             }
         }
     }
@@ -555,6 +580,10 @@ const DashboardPilgrimsDetail: React.FC = () => {
                                     </button>
                                 </div>
                             </div>
+                            <button type='button' className='text-red-500 active:text-red-600 font-bold uppercase text-xs outline-none focus:outline-none' onClick={() => handleDelete()}>
+                                <FontAwesomeIcon icon={faTriangleExclamation} />
+                                <span className='ml-2'>Hapus Akun</span>
+                            </button>
                         </div>
                     </div>
 
