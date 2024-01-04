@@ -1,6 +1,7 @@
 import { dateToPass, formatDateInput } from '@/lib/date/format'
 import Alert from '@/views/components/Alert'
 import Loader from '@/views/components/Loader'
+import AdminPilgrimsTabLayout from '@/views/layouts/AdminLayout/pilgrims/tab'
 import DashboardLayout from '@/views/layouts/DashboardLayout'
 import { faEye, faEyeSlash, faFloppyDisk, faTriangleExclamation } from '@fortawesome/free-solid-svg-icons'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
@@ -184,13 +185,7 @@ const DashboardPilgrimsDetail: React.FC = () => {
     if(loading || !isAuth) return <Loader />
     return (
         <DashboardLayout pageName='Data Jemaah Haji' role='Admin'>
-            <div className='grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-4'>
-                { /* button - working like tab */}
-                <button className='border-b-4 border-b-blue-500 text-blue-500 rounded-lg p-2 mb-4 text-center font-semibold'>Data Jemaah Haji</button>
-                <button className='border-b-4 text-slate-800 rounded-lg p-2 mb-4 text-center font-semibold'>Data Pembayaran</button>
-                <button className='border-b-4 rounded-lg p-2 mb-4 text-center font-semibold'>Data Dokumen</button>
-                <button className='border-b-4 rounded-lg p-2 mb-4 text-center font-semibold'>Data Fasilitas</button>
-            </div>
+            <AdminPilgrimsTabLayout/>
             <form className="grid grid-cols-1 sm:grid-cols-2 gap-4" onSubmit={handleEdit}>
                 <div className="grid grid-cols-1 gap-4 h-min-content">
                     {/* Data BPIH */}
