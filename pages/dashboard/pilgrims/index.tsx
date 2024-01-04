@@ -86,7 +86,7 @@ const DashboardPilgrims: React.FC = () => {
 
     const pilgrimsData = async () => {
         try {
-            await axios.get(`/api/pilgrims/getAll/${user.company_id}`).then((res) => {
+            await axios.get(`/api/pilgrims/data/getAll/${user.company_id}`).then((res) => {
                 setPilgrims(res.data.data)
                 setLoading(false)
             })

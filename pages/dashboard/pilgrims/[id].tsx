@@ -89,7 +89,7 @@ const DashboardPilgrimsDetail: React.FC = () => {
     const pilgrimsData = async () => {
         if(router.query.id != undefined) {
             try {
-                await axios.get(`/api/pilgrims/get/${router.query.id}`).then((res) => {
+                await axios.get(`/api/pilgrims/data/get/${router.query.id}`).then((res) => {
                     setPilgrim(res.data.data)
                     setLoading(false)
                 })
@@ -106,7 +106,7 @@ const DashboardPilgrimsDetail: React.FC = () => {
     const handleEdit = async (e: React.FormEvent<HTMLFormElement>) => {
         e.preventDefault()
         try {
-            await axios.put(`/api/pilgrims/update/${router.query.id}`, {
+            await axios.put(`/api/pilgrims/data/update/${router.query.id}`, {
                 departure_year: pilgrim.user_profile.departure_year,
                 reg_number: pilgrim.user_profile.reg_number,
                 portion_number: pilgrim.user_profile.portion_number,
@@ -153,7 +153,7 @@ const DashboardPilgrimsDetail: React.FC = () => {
     const handleDelete = async () => {
         if(confirm('Apakah anda yakin ingin menghapus data ini? Tindakan ini tidak dapat dibatalkan')) {
             try {
-                await axios.delete('/api/pilgrims/delete', {
+                await axios.delete('/api/pilgrims/data/delete', {
                     data: {
                         id: router.query.id
                     }

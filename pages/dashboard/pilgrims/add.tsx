@@ -180,7 +180,7 @@ const DashboardPilgrimsAdd: React.FC = () => {
 
     const handleInsert = async () => {
         try {
-            await axios.post(`/api/pilgrims/add`, {
+            await axios.post(`/api/pilgrims/data/add`, {
                 departure_year: pilgrim.user_profile.departure_year,
                 reg_number: pilgrim.user_profile.reg_number,
                 portion_number: pilgrim.user_profile.portion_number,
