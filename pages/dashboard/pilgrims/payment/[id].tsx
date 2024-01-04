@@ -66,7 +66,7 @@ const DashboardPilgrimsPaymentDetail: React.FC = () => {
     if(loading || !isAuth) return <Loader />
     return (
         <DashboardLayout pageName='Data Pembayaran Jemaah Haji' role='Admin'>
-            <AdminPilgrimsTabLayout id={router.query.id}/>
+            <AdminPilgrimsTabLayout id={router.query.id} activeTab='payment'/>
         </DashboardLayout>
     )
 }

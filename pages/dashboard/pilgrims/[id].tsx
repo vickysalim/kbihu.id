@@ -185,7 +185,7 @@ const DashboardPilgrimsDetail: React.FC = () => {
     if(loading || !isAuth) return <Loader />
     return (
         <DashboardLayout pageName='Data Jemaah Haji' role='Admin'>
-            <AdminPilgrimsTabLayout id={router.query.id}/>
+            <AdminPilgrimsTabLayout id={router.query.id} activeTab='data'/>
             <form className="grid grid-cols-1 sm:grid-cols-2 gap-4" onSubmit={handleEdit}>
                 <div className="grid grid-cols-1 gap-4 h-min-content">
                     {/* Data BPIH */}
