@@ -139,7 +139,7 @@ const DashboardPilgrimsPaymentDetail: React.FC = () => {
     const fileProofInputRef = useRef(null)
 
     const handleInputFile = (e: React.ChangeEvent<HTMLInputElement>) => {
-        const file = e.target.files[0]
+        const file = e.target.files?.[0]
         if(file) {
             setAddPayment({...addPayment, proof_file: file})
         }
@@ -185,6 +185,8 @@ const DashboardPilgrimsPaymentDetail: React.FC = () => {
         try {
             await axios.post(`/api/pilgrims/payment/add`, formData).then((res) => {
                 setMessage(res.data.message)
+                paymentData()
+                setAddPayment(paymentModel)
             })
         } catch (error: any) {
             if(error.response) {
