@@ -25,7 +25,7 @@ export default async function handler(
                 user_account_id: req.query.id as string
             },
             orderBy: {
-                created_at: 'asc'
+                transaction_date: 'asc'
             }
         })
 
