@@ -1,6 +1,7 @@
 import { dataTableStyle } from '@/lib/dataTable/style'
 import { formatDate } from '@/lib/date/format'
 import { downloadFile } from '@/lib/download'
+import Alert from '@/views/components/Alert'
 import Loader from '@/views/components/Loader'
 import AdminPilgrimsTabLayout from '@/views/layouts/AdminLayout/pilgrims/tab'
 import DashboardLayout from '@/views/layouts/DashboardLayout'
@@ -9,8 +10,15 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { Disclosure } from '@headlessui/react'
 import axios from 'axios'
 import { useRouter } from 'next/router'
-import { useEffect, useMemo, useState } from 'react'
+import React, { useEffect, useMemo, useRef, useState } from 'react'
 import DataTable from 'react-data-table-component'
+import { set, z } from 'zod'
+
+const validation = z.object({
+    transaction_date: z.string().min(1, { message: 'Tanggal pembayaran harus diisi' }),
+    amount: z.coerce.number().min(1, { message: 'Jumlah pembayaran harus diisi' }),
+    note: z.string().min(1, { message: 'Keterangan harus diisi' }),
+})
 
 const DashboardPilgrimsPaymentDetail: React.FC = () => {
     const [isAuth, setIsAuth] = useState(false)
@@ -125,6 +133,69 @@ const DashboardPilgrimsPaymentDetail: React.FC = () => {
         }
     ], [])
 
+    const [message, setMessage] = useState('')
+    const [validationMessage, setValidationMessage] = useState<{ [key: string]: string}>({})
+
+    const fileProofInputRef = useRef(null)
+
+    const handleInputFile = (e: React.ChangeEvent<HTMLInputElement>) => {
+        const file = e.target.files[0]
+        if(file) {
+            setAddPayment({...addPayment, proof_file: file})
+        }
+    }
+
+    const validateInsert = async (e: any) => {
+        e.preventDefault()
+        setValidationMessage({})
+
+        try {
+            validation.parse({
+                transaction_date: addPayment.transaction_date,
+                amount: addPayment.amount,
+                note: addPayment.note
+            })
+
+            handleInsert()
+        } catch (error) {
+            if(error instanceof z.ZodError) {
+                const errorMap: { [key: string]: string } = {}
+                error.errors.forEach((err) => {
+                    if (err.path) {
+                        errorMap[err.path[0]] = err.message
+                    }
+                })
+                setValidationMessage(errorMap)
+            } else {
+                setMessage(`Unknown error`)
+            }
+        }
+    }
+
+    const handleInsert = async () => {
+        let formData = new FormData()
+
+        formData.append('id', router.query.id as string)
+        formData.append('transaction_date', addPayment.transaction_date)
+        formData.append('amount', addPayment.amount)
+        formData.append('note', addPayment.note)
+
+        if(addPayment.proof_file) formData.append('proof_file', addPayment.proof_file)
+
+        try {
+            await axios.post(`/api/pilgrims/payment/add`, formData).then((res) => {
+                setMessage(res.data.message)
+            })
+        } catch (error: any) {
+            if(error.response) {
+                const fieldError = error.response.data.message
+                setMessage(`Error: ${fieldError}`)
+            } else {
+                setMessage(`Unknown Error`)
+            }
+        }
+    }
+
     useEffect(() => {
         if(!localStorage.getItem('token')) window.location.href = '/auth/login'
         else {
@@ -148,7 +219,7 @@ const DashboardPilgrimsPaymentDetail: React.FC = () => {
                         <span className='ml-1'>Tambah Data Pembayaran</span>
                     </Disclosure.Button>
                     <Disclosure.Panel className="mt-2 text-gray-500 bg-white rounded-lg p-4">
-                        <form>
+                        <form onSubmit={validateInsert}>
                             <div className='grid grid-cols-1 gap-4'>
                                 <div className='grid grid-cols-1 sm:grid-cols-2 md:grid-cols-2 gap-4'>
                                     <div className='flex flex-col'>
@@ -160,6 +231,7 @@ const DashboardPilgrimsPaymentDetail: React.FC = () => {
                                             onChange={(e) => setAddPayment({...addPayment, transaction_date: e.target.value})}
                                             className='rounded-lg border border-gray-300 p-2 focus:outline-none focus:border-blue-500'
                                         />
+                                        { validationMessage.transaction_date && <p className='text-sm text-red-500'>{validationMessage.transaction_date}</p> }
                                     </div>
                                     <div className='flex flex-col'>
                                         <label htmlFor='amount' className='text-sm font-semibold text-gray-500'>Jumlah Pembayaran</label>
@@ -172,6 +244,7 @@ const DashboardPilgrimsPaymentDetail: React.FC = () => {
                                                 onChange={(e) => setAddPayment({...addPayment, amount: e.target.value})}
                                                 className='w-full rounded-lg border border-gray-300 p-2 pl-10 focus:outline-none focus:border-blue-500'
                                             />
+                                            { validationMessage.amount && <p className='text-sm text-red-500'>{validationMessage.amount}</p> }
                                         </div>
                                     </div>
                                     <div className='flex flex-col'>
@@ -179,7 +252,10 @@ const DashboardPilgrimsPaymentDetail: React.FC = () => {
                                         <input
                                             type='file'
                                             id='logo'
-                                            className='bg-white p-2 w-full text-slate-500 text-sm rounded-lg leading-6 border border-gray-300 focus:border-blue-500 file:bg-blue-500 file:text-white file:font-bold file:font-uppercase file:text-xs file:px-4 file:py-1 file:active:bg-blue-600 file:border-none file:mr-4 file:rounded'/>
+                                            ref={fileProofInputRef}
+                                            onChange={handleInputFile}
+                                            className='bg-white p-2 w-full text-slate-500 text-sm rounded-lg leading-6 border border-gray-300 focus:border-blue-500 file:bg-blue-500 file:text-white file:font-bold file:font-uppercase file:text-xs file:px-4 file:py-1 file:active:bg-blue-600 file:border-none file:mr-4 file:rounded'
+                                        />
                                     </div>
                                     <div className='flex flex-col'>
                                         <label htmlFor='note' className='text-sm font-semibold text-gray-500'>Keterangan</label>
@@ -190,6 +266,7 @@ const DashboardPilgrimsPaymentDetail: React.FC = () => {
                                             onChange={(e) => setAddPayment({...addPayment, note: e.target.value})}
                                             className='rounded-lg border border-gray-300 p-2 focus:outline-none focus:border-blue-500'
                                         />
+                                        { validationMessage.note && <p className='text-sm text-red-500'>{validationMessage.note}</p> }
                                     </div>
                                 </div>
                             </div>
@@ -198,6 +275,9 @@ const DashboardPilgrimsPaymentDetail: React.FC = () => {
                                 <span className='ml-1'>Tambah</span>
                             </button>
                         </form>
+                        <div className='mt-4'>
+                            { message && <Alert type={message.includes('Error') ? 'error' : 'success'}>{message}</Alert>}
+                        </div>
                     </Disclosure.Panel>
                 </Disclosure>
             </div>
