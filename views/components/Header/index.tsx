@@ -17,6 +17,7 @@ const Header = ({ role }: HeaderProps) => {
     { href: '/dashboard', name: 'Beranda', role: ['Superadmin', 'Admin'] },
     { href: '/dashboard/pilgrims', name: 'Jemaah Haji', role: ['Admin'] },
     { href: '/dashboard/company-profile', name: 'Profil KBIHU', role: ['Admin'] },
+    { href: '/dashboard/config', name: 'Pengaturan Data', role: ['Admin']}
   ]
 
   const handleLogout = () => {
