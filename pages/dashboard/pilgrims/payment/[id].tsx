@@ -90,7 +90,7 @@ const DashboardPilgrimsPaymentDetail: React.FC = () => {
             name: 'Aksi',
             cell: (row: any) => {
                 return (
-                    <button className="bg-red-500 text-white active:bg-red-600 font-bold uppercase text-xs px-4 py-2 rounded shadow outline-none focus:outline-none mr-1 mb-1">
+                    <button type='button' className="bg-red-500 text-white active:bg-red-600 font-bold uppercase text-xs px-4 py-2 rounded shadow outline-none focus:outline-none mr-1 mb-1" onClick={() => handleDelete(row.id)}>
                         <FontAwesomeIcon icon={faTrashCan} />
                         <span className='ml-1'>Hapus</span>
                     </button>
@@ -198,6 +198,29 @@ const DashboardPilgrimsPaymentDetail: React.FC = () => {
         }
     }
 
+    const handleDelete = async (paymentId: String) => {
+        if(confirm('Apakah anda yakin ingin menghapus data ini? Tindakan ini tidak dapat dibatalkan')) {
+            try {
+                await axios.delete('/api/pilgrims/payment/delete', {
+                    data: {
+                        id: paymentId
+                    }
+                }).then((res) => {
+                    setMessage(res.data.message)
+                    paymentData()
+                })
+            } catch (error: any) {
+                if(error.response) {
+                    if(error.response.data.message[0].message)
+                        setMessage(`Error: ${error.response.data.message[0].message}`)
+                    else setMessage(`Error: ${error.response.data.message}`)
+                } else {
+                    setMessage(`Unknown Error`)
+                }
+            }
+        }
+    }
+
     useEffect(() => {
         if(!localStorage.getItem('token')) window.location.href = '/auth/login'
         else {
@@ -277,12 +300,14 @@ const DashboardPilgrimsPaymentDetail: React.FC = () => {
                                 <span className='ml-1'>Tambah</span>
                             </button>
                         </form>
-                        <div className='mt-4'>
-                            { message && <Alert type={message.includes('Error') ? 'error' : 'success'}>{message}</Alert>}
-                        </div>
                     </Disclosure.Panel>
                 </Disclosure>
             </div>
+
+            <div className='mt-4 mb-4'>
+                { message && <Alert type={message.includes('Error') ? 'error' : 'success'}>{message}</Alert>}
+            </div>
+
 
             { payment.length > 0 ? (
                 <DataTable
