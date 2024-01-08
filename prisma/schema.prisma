@@ -30,19 +30,20 @@ model company {
   registration     registration[]
   suggestion_box   suggestion_box[]
   user_account     user_account[]
-  user_document    user_document[]
   user_facility    user_facility[]
   user_payment     user_payment[]
 }
 
 model company_document {
-  id         String    @id @db.VarChar(36)
-  company_id String    @db.VarChar(36)
-  name       String    @db.VarChar(128)
-  created_at DateTime  @default(now()) @db.DateTime(0)
-  updated_at DateTime  @default(now()) @db.DateTime(0)
-  deleted_at DateTime? @db.DateTime(0)
-  company    company   @relation(fields: [company_id], references: [id], onUpdate: Restrict, map: "company_document_ibfk_1")
+  id                    String                  @id @db.VarChar(36)
+  company_id            String                  @db.VarChar(36)
+  name                  String                  @db.VarChar(128)
+  created_at            DateTime                @default(now()) @db.DateTime(0)
+  updated_at            DateTime                @default(now()) @db.DateTime(0)
+  deleted_at            DateTime?               @db.DateTime(0)
+  company               company                 @relation(fields: [company_id], references: [id], onUpdate: Restrict, map: "company_document_ibfk_1")
+  company_document_year company_document_year[]
+  user_document         user_document[]
 
   @@index([company_id], map: "company_id")
 }
@@ -175,15 +176,15 @@ model user_account {
 }
 
 model user_document {
-  id                  String       @id @db.VarChar(36)
-  company_document_id String       @db.VarChar(36)
-  user_account_id     String       @db.VarChar(36)
-  file                String       @db.VarChar(48)
-  created_at          DateTime     @default(now()) @db.DateTime(0)
-  updated_at          DateTime     @default(now()) @db.DateTime(0)
-  deleted_at          DateTime?    @db.DateTime(0)
-  company             company      @relation(fields: [company_document_id], references: [id], onUpdate: Restrict, map: "user_document_ibfk_1")
-  user_account        user_account @relation(fields: [user_account_id], references: [id], onUpdate: Restrict, map: "user_document_ibfk_2")
+  id                  String           @id @db.VarChar(36)
+  company_document_id String           @db.VarChar(36)
+  user_account_id     String           @db.VarChar(36)
+  file                String           @db.VarChar(48)
+  created_at          DateTime         @default(now()) @db.DateTime(0)
+  updated_at          DateTime         @default(now()) @db.DateTime(0)
+  deleted_at          DateTime?        @db.DateTime(0)
+  user_account        user_account     @relation(fields: [user_account_id], references: [id], onUpdate: Restrict, map: "user_document_ibfk_2")
+  company             company_document @relation(fields: [company_document_id], references: [id], onUpdate: Restrict, map: "user_document_ibfk_1")
 
   @@index([company_document_id], map: "company_document_id")
   @@index([user_account_id], map: "user_account_id")
@@ -260,6 +261,16 @@ model user_profile {
   user_account          user_account @relation(fields: [user_account_id], references: [id], onUpdate: Restrict, map: "user_profile_ibfk_1")
 
   @@index([user_account_id], map: "user_account_id")
+}
+
+model company_document_year {
+  id                  String           @id @db.VarChar(36)
+  company_document_id String           @db.VarChar(46)
+  year                Int
+  created_at          DateTime         @default(now()) @db.DateTime(0)
+  updated_at          DateTime         @default(now()) @db.DateTime(0)
+  deleted_at          DateTime?        @db.DateTime(0)
+  company_document    company_document @relation(fields: [company_document_id], references: [id], onUpdate: Restrict, map: "company_document_year_ibfk_1")
 }
 
 enum registration_status {
