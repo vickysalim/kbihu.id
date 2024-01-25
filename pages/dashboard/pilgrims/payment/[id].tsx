@@ -3,16 +3,19 @@ import { formatDate } from '@/lib/date/format'
 import { downloadFile } from '@/lib/download'
 import Alert from '@/views/components/Alert'
 import Loader from '@/views/components/Loader'
+import InvoicePdf from '@/views/document/payment'
 import AdminPilgrimsTabLayout from '@/views/layouts/AdminLayout/pilgrims/tab'
 import DashboardLayout from '@/views/layouts/DashboardLayout'
 import { faDownload, faPlus, faTrashCan } from '@fortawesome/free-solid-svg-icons'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { Disclosure } from '@headlessui/react'
+import { PDFDownloadLink } from '@react-pdf/renderer'
 import axios from 'axios'
 import { useRouter } from 'next/router'
 import React, { useEffect, useMemo, useRef, useState } from 'react'
 import DataTable from 'react-data-table-component'
 import { set, z } from 'zod'
+import { padNumbers } from '@/lib/number/format'
 
 const validation = z.object({
     transaction_date: z.string().min(1, { message: 'Tanggal pembayaran harus diisi' }),
@@ -73,6 +76,90 @@ const DashboardPilgrimsPaymentDetail: React.FC = () => {
             try {
                 await axios.get(`/api/pilgrims/payment/get/${router.query.id}`).then((res) => {
                     setPayment(res.data.data)
+                    pilgrimData()
+                })
+            } catch (error) {
+                console.log(error)
+            }
+        }
+    }
+
+    const pilgrimsModel = {
+        id: '',
+        username: '',
+        phone_number: '',
+        company_id: '',
+        user_profile: {
+            id:'',
+            departure_year:'',
+            reg_number:'',
+            portion_number:'',
+            bank:'',
+            bank_branch:'',
+            name:'',
+            nasab_name:'',
+            gender:'',
+            marital_status:'',
+            blood_type:'',
+            pob:'',
+            dob:'',
+            street:'',
+            postal_code:'',
+            subdistrict:'',
+            district:'',
+            city:'',
+            province:'',
+            education:'',
+            job:'',
+            passport_number:'',
+            passport_name:'',
+            passport_pob:'',
+            passport_dob:'',
+            passport_issue_date:'',
+            passport_expiry_date:'',
+            passport_issue_office:'',
+            passport_endorsement:'',
+            identity_number:''
+        }
+    }
+
+    const [pilgrim, setPilgrim] = useState(pilgrimsModel)
+
+    const pilgrimData = async () => {
+        if(router.query.id != undefined) {
+            try {
+                await axios.get(`/api/pilgrims/data/get/${router.query.id}`).then((res) => {
+                    setPilgrim(res.data.data)
+                    companyData(res.data.data.company_id)
+                })
+            } catch (error) {
+                console.log(error)
+            }
+        }
+    }
+
+    const companyModel = {
+        id: '',
+        name: '',
+        street: '',
+        district: '',
+        subdistrict: '',
+        city: '',
+        province: '',
+        postal_code: '',
+        company_logo: '',
+        phone_number: '',
+        leader: '',
+        license: ''
+    }
+
+    const [company, setCompany] = useState(companyModel)
+
+    const companyData = async (id: string) => {
+        if(id != undefined) {
+            try {
+                await axios.get(`/api/company/get/${id}`).then((res) => {
+                    setCompany(res.data.data)
                     setLoading(false)
                 })
             } catch (error) {
@@ -96,14 +183,14 @@ const DashboardPilgrimsPaymentDetail: React.FC = () => {
                     </button>
                 )
             },
-            width: '200px',
+            width: '150px',
         },
         {
             name: 'Jumlah Pembayaran',
             cell: (row: any) => {
                 return (
                     <>
-                        Rp. {row.amount.toString().replace(/(\d)(?=(\d{3})+(?!\d))/g, '$1,')} 
+                        Rp. {row.amount.toString().replace(/(\d)(?=(\d{3})+(?!\d))/g, '$1,')}
                     </>
                 )
             },
@@ -113,6 +200,7 @@ const DashboardPilgrimsPaymentDetail: React.FC = () => {
             cell: (row: any) => {
                 return row.note
             },
+            width: '400px',
         },
         {
             name: 'Tanggal Transaksi',
@@ -129,9 +217,27 @@ const DashboardPilgrimsPaymentDetail: React.FC = () => {
                         <span className='ml-1'>{row.proof_file ? 'Unduh Bukti' : 'Tidak Tersedia'}</span>
                     </button>
                 )
-            }
+            },
+            width: '175px',
+        },
+        {
+            name: 'Kwitansi',
+            cell: (row: any, index: any) => {
+                if(pilgrim.user_profile.name) return (
+                    <PDFDownloadLink document={<InvoicePdf id={row.id} amount={row.amount} description={row.note} transactionDate={row.transaction_date} transactionNumber={padNumbers(index+1)} name={pilgrim.user_profile.name} city={company.city} address={`${company.street}, Kel. ${company.subdistrict}, Kec. ${company.district}, Kota ${company.city}, ${company.province}, ${company.postal_code}`} companyName={company.name}/>} fileName={`invoice-${row.id}.pdf`} className='bg-blue-500 text-white active:bg-blue-600 font-bold uppercase text-xs px-4 py-2 rounded shadow outline-none focus:outline-none mr-1 mb-1 disabled:bg-gray-500 disabled:active:bg-gray-600'>
+                        {({ blob, url, loading, error }) =>
+                        loading ? 'Loading document...' : (
+                            <>
+                                <FontAwesomeIcon icon={faDownload} />
+                                <span className='ml-1'>Unduh Kwitansi (A5)</span>
+                            </>
+                        )}
+                    </PDFDownloadLink>
+                )
+            },
+            width: '225px',
         }
-    ], [])
+    ], [pilgrim.user_profile.name, company.name])
 
     const [message, setMessage] = useState('')
     const [validationMessage, setValidationMessage] = useState<{ [key: string]: string}>({})
@@ -309,7 +415,7 @@ const DashboardPilgrimsPaymentDetail: React.FC = () => {
             </div>
 
 
-            { payment.length > 0 ? (
+            { payment.length > 0 && pilgrim ? (
                 <DataTable
                     columns={columns}
                     data={payment}
