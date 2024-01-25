@@ -1,3 +1,5 @@
+import { padNumbers } from '@/lib/number/format';
+
 const formatDate = (date: string) => {
     return new Date(date).toLocaleDateString('id-ID', { year: 'numeric', month: 'long', day: 'numeric' })
 }
@@ -14,4 +16,14 @@ const dateToPass = (date: string) => {
     return date.substring(0, 10).replace(/-/g, '')
 }
 
-export { formatDate, formatDateInput, dateToPass }
+const convertToMMYY = (dateString: string) => {
+    const date = new Date(dateString);
+
+    const month = padNumbers(date.getMonth() + 1, 2);
+    const year = date.getFullYear().toString().slice(-2);
+
+    return `${month}-${year}`;
+}
+
+
+export { formatDate, formatDateInput, dateToPass, convertToMMYY }
