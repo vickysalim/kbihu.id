@@ -183,8 +183,8 @@ model user_document {
   created_at          DateTime         @default(now()) @db.DateTime(0)
   updated_at          DateTime         @default(now()) @db.DateTime(0)
   deleted_at          DateTime?        @db.DateTime(0)
-  user_account        user_account     @relation(fields: [user_account_id], references: [id], onUpdate: Restrict, map: "user_document_ibfk_2")
   company             company_document @relation(fields: [company_document_id], references: [id], onUpdate: Restrict, map: "user_document_ibfk_1")
+  user_account        user_account     @relation(fields: [user_account_id], references: [id], onUpdate: Restrict, map: "user_document_ibfk_2")
 
   @@index([company_document_id], map: "company_document_id")
   @@index([user_account_id], map: "user_account_id")
@@ -211,6 +211,7 @@ model user_payment {
   amount           Int
   note             String?      @db.Text
   proof_file       String?      @db.VarChar(48)
+  recipient        String       @db.VarChar(64)
   is_validated     Boolean      @default(false)
   transaction_date DateTime     @default(now()) @db.Date
   created_at       DateTime     @default(now()) @db.DateTime(0)
@@ -271,6 +272,8 @@ model company_document_year {
   updated_at          DateTime         @default(now()) @db.DateTime(0)
   deleted_at          DateTime?        @db.DateTime(0)
   company_document    company_document @relation(fields: [company_document_id], references: [id], onUpdate: Restrict, map: "company_document_year_ibfk_1")
+
+  @@index([company_document_id], map: "company_document_year_ibfk_1")
 }
 
 enum registration_status {
