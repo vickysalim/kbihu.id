@@ -17,6 +17,7 @@ export default async function handler(
                 id: true,
                 username: true,
                 phone_number: true,
+                company_id: true,
                 user_profile: {
                     select: {
                         id: true,
@@ -66,6 +67,7 @@ export default async function handler(
                 id: pilgrim.id,
                 username: pilgrim.username,
                 phone_number: pilgrim.phone_number,
+                company_id: pilgrim.company_id,
                 user_profile: {
                     id: pilgrim.user_profile[0].id,
                     departure_year: pilgrim.user_profile[0].departure_year,
