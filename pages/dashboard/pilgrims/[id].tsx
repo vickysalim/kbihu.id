@@ -48,6 +48,7 @@ const DashboardPilgrimsDetail: React.FC = () => {
         id: '',
         username: '',
         phone_number: '',
+        company_id: '',
         user_profile: {
             id:'',
             departure_year:'',
