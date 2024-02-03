@@ -3,7 +3,7 @@ import DashboardLayout from '@/views/layouts/DashboardLayout'
 import { faEye, faPlus } from '@fortawesome/free-solid-svg-icons'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import axios from 'axios'
-import { useEffect, useMemo, useState } from 'react'
+import { useCallback, useEffect, useMemo, useState } from 'react'
 import DataTable from "react-data-table-component"
 import { dataTableStyle } from '@/lib/dataTable/style'
 import { multipleDataInclude } from '@/lib/data/include'
@@ -85,7 +85,7 @@ const DashboardPilgrims: React.FC = () => {
 
     const [pilgrims, setPilgrims] = useState([pilgrimsModel])
 
-    const pilgrimsData = async () => {
+    const pilgrimsData = useCallback(async () => {
         try {
             await axios.get(`/api/pilgrims/data/getAll/${user.company_id}`).then((res) => {
                 setPilgrims(res.data.data)
@@ -94,7 +94,7 @@ const DashboardPilgrims: React.FC = () => {
         } catch (error) {
             console.log(error)
         }
-    }
+    }, [user.company_id])
 
     const columns = useMemo(() => [
         {
@@ -240,7 +240,7 @@ const DashboardPilgrims: React.FC = () => {
         }
 
         pilgrimsData()
-    }, [isAuth, user])
+    }, [isAuth, user, pilgrimsData])
 
     const tableStyle: {} = dataTableStyle
     
@@ -253,9 +253,10 @@ const DashboardPilgrims: React.FC = () => {
                 <span className='ml-1'>Tambah Jemaah Haji Baru</span>
             </button>
             <div className="w-full mx-auto py-5">
-                <input type="text" value={searchPilgrims} onChange={(e) => setSearchPilgrims(e.target.value)} placeholder='Cari Nama, No. Porsi, NIK, No. Paspor, atau Tahun Keberangkatan' className='w-full lg:w-2/5 rounded-lg border border-gray-300 p-2 focus:outline-none focus:border-blue-500 mb-2'/>
 
-                { pilgrims.length > 0 ? (
+                { pilgrims.length > 0 ? ( <>
+                    <input type="text" value={searchPilgrims} onChange={(e) => setSearchPilgrims(e.target.value)} placeholder='Cari Nama, No. Porsi, NIK, No. Paspor, atau Tahun Keberangkatan' className='w-full lg:w-2/5 rounded-lg border border-gray-300 p-2 focus:outline-none focus:border-blue-500 mb-2'/>
+
                     <DataTable
                         columns={columns}
                         data={pilgrims.filter((item) => {
@@ -265,7 +266,7 @@ const DashboardPilgrims: React.FC = () => {
                         pagination={true}
                         customStyles={tableStyle}
                     />
-                ) : ('') }
+                </> ) : ('') }
             </div>
         </DashboardLayout>
     )
