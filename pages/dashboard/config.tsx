@@ -1,12 +1,7 @@
 import Loader from '@/views/components/Loader'
 import DashboardLayout from '@/views/layouts/DashboardLayout'
-import { faPlus, faTrashCan } from '@fortawesome/free-solid-svg-icons'
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import axios from 'axios'
-import { useEffect, useMemo, useState } from 'react'
-import DataTable from "react-data-table-component"
-import { dataTableStyle } from '@/lib/dataTable/style'
-import { Disclosure } from '@headlessui/react'
+import { useEffect,  useState } from 'react'
 import AdminDocumentConfigLayout from '@/views/layouts/SuperadminLayout/config/document'
 
 const DashboardConfiguration: React.FC = () => {
