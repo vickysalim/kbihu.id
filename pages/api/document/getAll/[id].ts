@@ -20,6 +20,9 @@ export default async function handler(
                     select: {
                         id: true,
                         year: true,
+                    },
+                    orderBy: {
+                        year: 'asc'
                     }
                 }
             },
