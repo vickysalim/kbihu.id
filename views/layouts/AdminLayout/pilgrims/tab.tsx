@@ -20,6 +20,7 @@ const AdminPilgrimsTabLayout = ({ id, activeTab }: AdminPilgrimsTabLayoutProps) 
             </button>
             <button
                 className={`border-b-4 ${activeTab == 'document' ? activeTabStyle : inactiveTabStyle} rounded-lg p-2 mb-4 text-center font-semibold`}
+                onClick={() => window.location.href = `/dashboard/pilgrims/document/${id}`}
                 >
                     Data Dokumen
             </button>
