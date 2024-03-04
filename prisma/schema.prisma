@@ -8,30 +8,31 @@ datasource db {
 }
 
 model company {
-  id               String             @id @db.VarChar(36)
-  name             String             @db.VarChar(128)
-  street           String             @db.VarChar(128)
-  district         String             @db.VarChar(64)
-  subdistrict      String             @db.VarChar(64)
-  city             String             @db.VarChar(64)
-  province         String             @db.VarChar(64)
-  postal_code      Int
-  company_logo     String?            @db.VarChar(48)
-  phone_number     String             @db.VarChar(16)
-  leader           String             @db.VarChar(128)
-  license          String             @db.VarChar(64)
-  created_at       DateTime           @default(now()) @db.DateTime(0)
-  updated_at       DateTime           @default(now()) @db.DateTime(0)
-  deleted_at       DateTime?          @db.DateTime(0)
-  company_document company_document[]
-  company_facility company_facility[]
-  company_gallery  company_gallery[]
-  information      information[]
-  registration     registration[]
-  suggestion_box   suggestion_box[]
-  user_account     user_account[]
-  user_facility    user_facility[]
-  user_payment     user_payment[]
+  id                          String                        @id @db.VarChar(36)
+  name                        String                        @db.VarChar(128)
+  street                      String                        @db.VarChar(128)
+  district                    String                        @db.VarChar(64)
+  subdistrict                 String                        @db.VarChar(64)
+  city                        String                        @db.VarChar(64)
+  province                    String                        @db.VarChar(64)
+  postal_code                 Int
+  company_logo                String?                       @db.VarChar(48)
+  phone_number                String                        @db.VarChar(16)
+  leader                      String                        @db.VarChar(128)
+  license                     String                        @db.VarChar(64)
+  sim_file                    String?                       @db.VarChar(48)
+  created_at                  DateTime                      @default(now()) @db.DateTime(0)
+  updated_at                  DateTime                      @default(now()) @db.DateTime(0)
+  deleted_at                  DateTime?                     @db.DateTime(0)
+  company_document            company_document[]
+  company_facility            company_facility[]
+  company_gallery             company_gallery[]
+  company_simulation_schedule company_simulation_schedule[]
+  information                 information[]
+  registration                registration[]
+  suggestion_box              suggestion_box[]
+  user_account                user_account[]
+  user_payment                user_payment[]
 }
 
 model company_document {
@@ -49,13 +50,15 @@ model company_document {
 }
 
 model company_facility {
-  id         String    @id @db.VarChar(36)
-  company_id String    @db.VarChar(36)
-  name       String    @db.VarChar(128)
-  created_at DateTime  @default(now()) @db.DateTime(0)
-  updated_at DateTime  @default(now()) @db.DateTime(0)
-  deleted_at DateTime? @db.DateTime(0)
-  company    company   @relation(fields: [company_id], references: [id], onUpdate: Restrict, map: "company_facility_ibfk_1")
+  id                    String                  @id @db.VarChar(36)
+  company_id            String                  @db.VarChar(36)
+  name                  String                  @db.VarChar(128)
+  created_at            DateTime                @default(now()) @db.DateTime(0)
+  updated_at            DateTime                @default(now()) @db.DateTime(0)
+  deleted_at            DateTime?               @db.DateTime(0)
+  company               company                 @relation(fields: [company_id], references: [id], onUpdate: Restrict, map: "company_facility_ibfk_1")
+  company_facility_year company_facility_year[]
+  user_facility         user_facility[]
 
   @@index([company_id], map: "company_id")
 }
@@ -179,7 +182,9 @@ model user_document {
   id                  String           @id @db.VarChar(36)
   company_document_id String           @db.VarChar(36)
   user_account_id     String           @db.VarChar(36)
-  file                String           @db.VarChar(48)
+  file                String?          @db.VarChar(48)
+  description         String?          @db.Text
+  submit_date         DateTime         @db.Date
   created_at          DateTime         @default(now()) @db.DateTime(0)
   updated_at          DateTime         @default(now()) @db.DateTime(0)
   deleted_at          DateTime?        @db.DateTime(0)
@@ -191,14 +196,16 @@ model user_document {
 }
 
 model user_facility {
-  id                  String       @id @db.VarChar(36)
-  company_facility_id String       @db.VarChar(36)
-  user_account_id     String       @db.VarChar(36)
-  created_at          DateTime     @default(now()) @db.DateTime(0)
-  updated_at          DateTime     @default(now()) @db.DateTime(0)
-  deleted_at          DateTime?    @db.DateTime(0)
-  company             company      @relation(fields: [company_facility_id], references: [id], onUpdate: Restrict, map: "user_facility_ibfk_1")
-  user_account        user_account @relation(fields: [user_account_id], references: [id], onUpdate: Restrict, map: "user_facility_ibfk_2")
+  id                  String           @id @db.VarChar(36)
+  company_facility_id String           @db.VarChar(36)
+  user_account_id     String           @db.VarChar(36)
+  description         String?          @db.Text
+  submit_date         DateTime         @db.Date
+  created_at          DateTime         @default(now()) @db.DateTime(0)
+  updated_at          DateTime         @default(now()) @db.DateTime(0)
+  deleted_at          DateTime?        @db.DateTime(0)
+  company             company_facility @relation(fields: [company_facility_id], references: [id], onUpdate: Restrict, map: "user_facility_ibfk_1")
+  user_account        user_account     @relation(fields: [user_account_id], references: [id], onUpdate: Restrict, map: "user_facility_ibfk_2")
 
   @@index([company_facility_id], map: "company_facility_id")
   @@index([user_account_id], map: "user_account_id")
@@ -211,7 +218,7 @@ model user_payment {
   amount           Int
   note             String?      @db.Text
   proof_file       String?      @db.VarChar(48)
-  recipient        String       @db.VarChar(64)
+  recipient        String?      @db.VarChar(64)
   is_validated     Boolean      @default(false)
   transaction_date DateTime     @default(now()) @db.Date
   created_at       DateTime     @default(now()) @db.DateTime(0)
@@ -274,6 +281,31 @@ model company_document_year {
   company_document    company_document @relation(fields: [company_document_id], references: [id], onUpdate: Restrict, map: "company_document_year_ibfk_1")
 
   @@index([company_document_id], map: "company_document_year_ibfk_1")
+}
+
+model company_facility_year {
+  id                  String           @id @db.VarChar(36)
+  company_facility_id String           @db.VarChar(36)
+  year                String           @default("ALL") @db.VarChar(4)
+  created_at          DateTime         @default(now()) @db.DateTime(0)
+  updated_at          DateTime         @default(now()) @db.DateTime(0)
+  deleted_at          DateTime?        @db.DateTime(0)
+  company_facility    company_facility @relation(fields: [company_facility_id], references: [id], onUpdate: Restrict, map: "company_facility_year_ibfk_1")
+
+  @@index([company_facility_id], map: "company_facility_id")
+}
+
+model company_simulation_schedule {
+  id         String    @id @db.VarChar(36)
+  company_id String    @db.VarChar(36)
+  file       String    @db.VarChar(48)
+  year       Int
+  created_at DateTime  @default(now()) @db.DateTime(0)
+  updated_at DateTime  @default(now()) @db.DateTime(0)
+  deleted_at DateTime? @db.DateTime(0)
+  company    company   @relation(fields: [company_id], references: [id], onUpdate: Restrict, map: "company_simulation_schedule_ibfk_1")
+
+  @@index([company_id], map: "company_id")
 }
 
 enum registration_status {

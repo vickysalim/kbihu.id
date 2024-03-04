@@ -33,12 +33,12 @@ export default async function handler(
       const company_id = user?.company_id;
       const user_year = user?.user_profile[0].departure_year.toString();
 
-      const document = await prisma.company_document.findMany({
+      const facility = await prisma.company_facility.findMany({
         select: {
           id: true,
           company_id: true,
           name: true,
-          company_document_year: {
+          company_facility_year: {
             select: {
               id: true,
               year: true,
@@ -48,10 +48,9 @@ export default async function handler(
               deleted_at: null,
             },
           },
-          user_document: {
+          user_facility: {
             select: {
               id: true,
-              file: true,
               description: true,
               submit_date: true,
             },
@@ -67,11 +66,11 @@ export default async function handler(
         },
       });
 
-      const filteredDoc = document.filter(
-        (doc) => doc.company_document_year.length > 0
+      const filteredDoc = facility.filter(
+        (doc) => doc.company_facility_year.length > 0
       );
 
-      return api.res(res, 200, true, "Get document data success", filteredDoc);
+      return api.res(res, 200, true, "Get facility data success", filteredDoc);
     } else {
       return api.res(res, 404, false, "User not found");
     }

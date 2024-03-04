@@ -7,7 +7,7 @@ import { createFolderIfNotExists } from "@/lib/folder";
 import fs from "fs";
 import { v4 as uuidv4 } from "uuid";
 
-const dest = "public/upload_files/pilgrims/payment";
+const dest = "public/upload_files/pilgrims/document";
 const upload = multer({ dest: dest });
 
 export const config = {
@@ -27,28 +27,14 @@ export default async function handler(
     "public",
     "upload_files",
     "pilgrims",
-    "payment"
+    "document"
   );
   createFolderIfNotExists(folderPath);
 
-  upload.single("proof_file")(req, res, async (error) => {
+  upload.single("file")(req, res, async (error) => {
     try {
-      if (
-        !req.body.id ||
-        !req.body.transaction_date ||
-        !req.body.amount ||
-        !req.body.note
-      )
+      if (!req.body.document_id || !req.body.user_id || !req.body.submit_date)
         return api.res(res, 404, false, `All fields required`);
-
-      const data = await prisma.user_account.findUnique({
-        where: {
-          id: req.body.id as string,
-          deleted_at: null,
-        },
-      });
-
-      if (!data) return api.null(res, data, `Jemaah`);
 
       if (req.file != undefined) {
         const filePath = req.file.path;
@@ -78,44 +64,42 @@ export default async function handler(
 
         fs.rename(filePath, destination, async (error) => {
           try {
-            await prisma.user_payment
+            await prisma.user_document
               .create({
                 data: {
                   id: uuidv4(),
-                  company_id: data.company_id as string,
-                  user_account_id: req.body.id as string,
-                  transaction_date: new Date(req.body.transaction_date),
-                  amount: parseInt(req.body.amount) as number,
-                  note: req.body.note as string,
-                  proof_file: finalFileName,
+                  company_document_id: req.body.document_id as string,
+                  user_account_id: req.body.user_id as string,
+                  submit_date: new Date(req.body.submit_date),
+                  description: (req.body.description as string) || null,
+                  file: finalFileName,
                 },
               })
               .catch((err) => {
-                return api.res(res, 404, false, `Failed to add data: ${err}`);
+                return api.res(res, 404, false, `Failed to add data`);
               });
 
-            return api.res(res, 200, true, `Created new payment data`);
+            return api.res(res, 200, true, `Created new document data`);
           } catch (error) {
             return api.error(res, error.message);
           }
         });
       } else {
-        await prisma.user_payment
+        await prisma.user_document
           .create({
             data: {
               id: uuidv4(),
-              company_id: data.company_id as string,
-              user_account_id: req.body.id as string,
-              transaction_date: new Date(req.body.transaction_date),
-              amount: parseInt(req.body.amount) as number,
-              note: req.body.note as string,
+              company_document_id: req.body.document_id as string,
+              user_account_id: req.body.user_id as string,
+              submit_date: new Date(req.body.submit_date),
+              description: (req.body.description as string) || null,
             },
           })
           .catch((err) => {
-            return api.res(res, 404, false, `Failed to add data: ${err}`);
+            return api.res(res, 404, false, `Failed to add data`);
           });
 
-        return api.res(res, 200, true, `Created new payment data`);
+        return api.res(res, 200, true, `Created new document data`);
       }
     } catch (error) {
       return api.error(res, error.message);
