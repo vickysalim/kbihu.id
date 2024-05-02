@@ -8,6 +8,7 @@ import DashboardLayout from "@/views/layouts/DashboardLayout";
 import {
   faDownload,
   faPen,
+  faPencil,
   faPlus,
   faTrashCan,
   faXmark,
@@ -121,14 +122,23 @@ const DashboardPilgrimsDocumentDetail: React.FC = () => {
         cell: (row: any) => {
           if (row.user_document.length > 0)
             return (
-              <button
-                type="button"
-                className="bg-red-500 text-white active:bg-red-600 font-bold uppercase text-xs px-4 py-2 rounded shadow outline-none focus:outline-none mr-1 mb-1"
-                onClick={() => handleDelete(row.user_document[0].id)}
-              >
-                <FontAwesomeIcon icon={faTrashCan} />
-                <span className="ml-1">Hapus</span>
-              </button>
+              <>
+                <button
+                  type="button"
+                  className="bg-blue-500 text-white active:bg-blue-600 font-bold uppercase text-xs px-4 py-2 rounded shadow outline-none focus:outline-none mr-1 mb-1"
+                >
+                  <FontAwesomeIcon icon={faPencil} />
+                  <span className="ml-1">Edit</span>
+                </button>
+                <button
+                  type="button"
+                  className="bg-red-500 text-white active:bg-red-600 font-bold uppercase text-xs px-4 py-2 rounded shadow outline-none focus:outline-none mr-1 mb-1"
+                  onClick={() => handleDelete(row.user_document[0].id)}
+                >
+                  <FontAwesomeIcon icon={faTrashCan} />
+                  <span className="ml-1">Hapus</span>
+                </button>
+              </>
             );
           else
             return (
@@ -142,7 +152,7 @@ const DashboardPilgrimsDocumentDetail: React.FC = () => {
               </button>
             );
         },
-        width: "150px",
+        width: "200px",
       },
       {
         name: "",

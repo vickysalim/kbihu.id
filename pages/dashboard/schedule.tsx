@@ -5,6 +5,7 @@ import Loader from "@/views/components/Loader";
 import DashboardLayout from "@/views/layouts/DashboardLayout";
 import {
   faDownload,
+  faPencil,
   faPlus,
   faTrashCan,
 } from "@fortawesome/free-solid-svg-icons";
@@ -112,17 +113,26 @@ const DashboardConfiguration: React.FC = () => {
         name: "Aksi",
         cell: (row: any) => {
           return (
-            <button
-              type="button"
-              className="bg-red-500 text-white active:bg-red-600 font-bold uppercase text-xs px-4 py-2 rounded shadow outline-none focus:outline-none mr-1 mb-1"
-              onClick={() => handleDelete(row.id)}
-            >
-              <FontAwesomeIcon icon={faTrashCan} />
-              <span className="ml-1">Hapus</span>
-            </button>
+            <>
+              <button
+                type="button"
+                className="bg-blue-500 text-white active:bg-blue-600 font-bold uppercase text-xs px-4 py-2 rounded shadow outline-none focus:outline-none mr-1 mb-1"
+              >
+                <FontAwesomeIcon icon={faPencil} />
+                <span className="ml-1">Edit</span>
+              </button>
+              <button
+                type="button"
+                className="bg-red-500 text-white active:bg-red-600 font-bold uppercase text-xs px-4 py-2 rounded shadow outline-none focus:outline-none mr-1 mb-1"
+                onClick={() => handleDelete(row.id)}
+              >
+                <FontAwesomeIcon icon={faTrashCan} />
+                <span className="ml-1">Hapus</span>
+              </button>
+            </>
           );
         },
-        width: "150px",
+        width: "200px",
       },
       {
         name: "Tahun Keberangkatan",

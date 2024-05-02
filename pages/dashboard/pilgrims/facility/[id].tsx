@@ -8,6 +8,7 @@ import DashboardLayout from "@/views/layouts/DashboardLayout";
 import {
   faDownload,
   faPen,
+  faPencil,
   faPlus,
   faTrashCan,
   faXmark,
@@ -21,7 +22,7 @@ import DataTable from "react-data-table-component";
 import { z } from "zod";
 
 const validation = z.object({
-  date: z.string().min(1, { message: "Tanggal pengumpulan harus diisi" }),
+  date: z.string().min(1, { message: "Tanggal penyerahan harus diisi" }),
 });
 
 const DashboardPilgrimsFacilityDetail: React.FC = () => {
@@ -121,14 +122,23 @@ const DashboardPilgrimsFacilityDetail: React.FC = () => {
         cell: (row: any) => {
           if (row.user_facility.length > 0)
             return (
-              <button
-                type="button"
-                className="bg-red-500 text-white active:bg-red-600 font-bold uppercase text-xs px-4 py-2 rounded shadow outline-none focus:outline-none mr-1 mb-1"
-                onClick={() => handleDelete(row.user_facility[0].id)}
-              >
-                <FontAwesomeIcon icon={faTrashCan} />
-                <span className="ml-1">Hapus</span>
-              </button>
+              <>
+                <button
+                  type="button"
+                  className="bg-blue-500 text-white active:bg-blue-600 font-bold uppercase text-xs px-4 py-2 rounded shadow outline-none focus:outline-none mr-1 mb-1"
+                >
+                  <FontAwesomeIcon icon={faPencil} />
+                  <span className="ml-1">Edit</span>
+                </button>
+                <button
+                  type="button"
+                  className="bg-red-500 text-white active:bg-red-600 font-bold uppercase text-xs px-4 py-2 rounded shadow outline-none focus:outline-none mr-1 mb-1"
+                  onClick={() => handleDelete(row.user_facility[0].id)}
+                >
+                  <FontAwesomeIcon icon={faTrashCan} />
+                  <span className="ml-1">Hapus</span>
+                </button>
+              </>
             );
           else
             return (
@@ -142,7 +152,7 @@ const DashboardPilgrimsFacilityDetail: React.FC = () => {
               </button>
             );
         },
-        width: "150px",
+        width: "200px",
       },
       {
         name: "",
@@ -165,12 +175,12 @@ const DashboardPilgrimsFacilityDetail: React.FC = () => {
         },
       },
       {
-        name: "Detail Pengumpulan",
+        name: "Detail Penyerahan",
         cell: (row: any) => {
           return row.user_facility.length > 0 ? (
             <div className="flex flex-col">
               <p>
-                Tanggal Pengumpulan:{" "}
+                Tanggal Penyerahan:{" "}
                 {formatDateInput(row.user_facility[0].submit_date)}
               </p>
               <p>Keterangan: {row.user_facility[0].description || "-"}</p>
@@ -391,7 +401,7 @@ const DashboardPilgrimsFacilityDetail: React.FC = () => {
                       htmlFor="date"
                       className="text-sm font-semibold text-gray-500"
                     >
-                      Tanggal Pengumpulan
+                      Tanggal Penyerahan
                     </label>
                     <input
                       type="date"

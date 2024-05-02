@@ -33,12 +33,7 @@ export default async function handler(
 
   upload.single("proof_file")(req, res, async (error) => {
     try {
-      if (
-        !req.body.id ||
-        !req.body.transaction_date ||
-        !req.body.amount ||
-        !req.body.note
-      )
+      if (!req.body.id || !req.body.transaction_date || !req.body.amount)
         return api.res(res, 404, false, `All fields required`);
 
       const data = await prisma.user_account.findUnique({
@@ -87,6 +82,7 @@ export default async function handler(
                   transaction_date: new Date(req.body.transaction_date),
                   amount: parseInt(req.body.amount) as number,
                   note: req.body.note as string,
+                  recipient: (req.body.recipient as string) || null,
                   proof_file: finalFileName,
                 },
               })
@@ -109,6 +105,7 @@ export default async function handler(
               transaction_date: new Date(req.body.transaction_date),
               amount: parseInt(req.body.amount) as number,
               note: req.body.note as string,
+              recipient: (req.body.recipient as string) || null,
             },
           })
           .catch((err) => {

@@ -8,6 +8,7 @@ import AdminPilgrimsTabLayout from "@/views/layouts/AdminLayout/pilgrims/tab";
 import DashboardLayout from "@/views/layouts/DashboardLayout";
 import {
   faDownload,
+  faPencil,
   faPlus,
   faTrashCan,
 } from "@fortawesome/free-solid-svg-icons";
@@ -22,7 +23,8 @@ import { set, z } from "zod";
 import { padNumbers } from "@/lib/number/format";
 
 const validation = z.object({
-  year: z.string().min(1, { message: "Keterangan harus diisi" }),
+  transaction_date: z.string().nonempty({ message: "Tanggal harus diisi" }),
+  amount: z.string().nonempty({ message: "Jumlah harus diisi" }),
 });
 
 const DashboardPilgrimsPaymentDetail: React.FC = () => {
@@ -71,6 +73,7 @@ const DashboardPilgrimsPaymentDetail: React.FC = () => {
     amount: "",
     note: "",
     proof_file: "",
+    recipient: "",
     transaction_date: "",
   };
 
@@ -192,17 +195,26 @@ const DashboardPilgrimsPaymentDetail: React.FC = () => {
         name: "Aksi",
         cell: (row: any) => {
           return (
-            <button
-              type="button"
-              className="bg-red-500 text-white active:bg-red-600 font-bold uppercase text-xs px-4 py-2 rounded shadow outline-none focus:outline-none mr-1 mb-1"
-              onClick={() => handleDelete(row.id)}
-            >
-              <FontAwesomeIcon icon={faTrashCan} />
-              <span className="ml-1">Hapus</span>
-            </button>
+            <>
+              <button
+                type="button"
+                className="bg-blue-500 text-white active:bg-blue-600 font-bold uppercase text-xs px-4 py-2 rounded shadow outline-none focus:outline-none mr-1 mb-1"
+              >
+                <FontAwesomeIcon icon={faPencil} />
+                <span className="ml-1">Edit</span>
+              </button>
+              <button
+                type="button"
+                className="bg-red-500 text-white active:bg-red-600 font-bold uppercase text-xs px-4 py-2 rounded shadow outline-none focus:outline-none mr-1 mb-1"
+                onClick={() => handleDelete(row.id)}
+              >
+                <FontAwesomeIcon icon={faTrashCan} />
+                <span className="ml-1">Hapus</span>
+              </button>
+            </>
           );
         },
-        width: "150px",
+        width: "200px",
       },
       {
         name: "Jumlah Pembayaran",
@@ -218,14 +230,19 @@ const DashboardPilgrimsPaymentDetail: React.FC = () => {
       {
         name: "Keterangan",
         cell: (row: any) => {
-          return row.note;
+          return row.note || "-";
         },
-        width: "400px",
       },
       {
         name: "Tanggal Transaksi",
         cell: (row: any) => {
           return formatDate(row.transaction_date);
+        },
+      },
+      {
+        name: "Penerima",
+        cell: (row: any) => {
+          return row.recipient || "-";
         },
       },
       {
@@ -263,6 +280,7 @@ const DashboardPilgrimsPaymentDetail: React.FC = () => {
                     city={company.city}
                     address={`${company.street}, Kel. ${company.subdistrict}, Kec. ${company.district}, Kota ${company.city}, ${company.province}, ${company.postal_code}`}
                     companyName={company.name}
+                    staff={row.recipient}
                   />
                 }
                 fileName={`invoice-${row.id}.pdf`}
@@ -309,7 +327,6 @@ const DashboardPilgrimsPaymentDetail: React.FC = () => {
       validation.parse({
         transaction_date: addPayment.transaction_date,
         amount: addPayment.amount,
-        note: addPayment.note,
       });
 
       handleInsert();
@@ -334,7 +351,11 @@ const DashboardPilgrimsPaymentDetail: React.FC = () => {
     formData.append("id", router.query.id as string);
     formData.append("transaction_date", addPayment.transaction_date);
     formData.append("amount", addPayment.amount);
-    formData.append("note", addPayment.note);
+
+    if (addPayment.note) formData.append("note", addPayment.note);
+
+    if (addPayment.recipient)
+      formData.append("recipient", addPayment.recipient);
 
     if (addPayment.proof_file)
       formData.append("proof_file", addPayment.proof_file);
@@ -467,21 +488,6 @@ const DashboardPilgrimsPaymentDetail: React.FC = () => {
                   </div>
                   <div className="flex flex-col">
                     <label
-                      htmlFor="name"
-                      className="text-sm font-semibold text-gray-500"
-                    >
-                      Upload Bukti Pembayaran
-                    </label>
-                    <input
-                      type="file"
-                      id="logo"
-                      ref={fileProofInputRef}
-                      onChange={handleInputFile}
-                      className="bg-white p-2 w-full text-slate-500 text-sm rounded-lg leading-6 border border-gray-300 focus:border-blue-500 file:bg-blue-500 file:text-white file:font-bold file:font-uppercase file:text-xs file:px-4 file:py-1 file:active:bg-blue-600 file:border-none file:mr-4 file:rounded"
-                    />
-                  </div>
-                  <div className="flex flex-col">
-                    <label
                       htmlFor="note"
                       className="text-sm font-semibold text-gray-500"
                     >
@@ -496,11 +502,41 @@ const DashboardPilgrimsPaymentDetail: React.FC = () => {
                       }
                       className="rounded-lg border border-gray-300 p-2 focus:outline-none focus:border-blue-500"
                     />
-                    {validationMessage.note && (
-                      <p className="text-sm text-red-500">
-                        {validationMessage.note}
-                      </p>
-                    )}
+                  </div>
+                  <div className="flex flex-col">
+                    <label
+                      htmlFor="recipient"
+                      className="text-sm font-semibold text-gray-500"
+                    >
+                      Penerima
+                    </label>
+                    <input
+                      type="text"
+                      id="recipient"
+                      value={addPayment.recipient}
+                      onChange={(e) =>
+                        setAddPayment({
+                          ...addPayment,
+                          recipient: e.target.value,
+                        })
+                      }
+                      className="rounded-lg border border-gray-300 p-2 focus:outline-none focus:border-blue-500"
+                    />
+                  </div>
+                  <div className="flex flex-col">
+                    <label
+                      htmlFor="name"
+                      className="text-sm font-semibold text-gray-500"
+                    >
+                      Upload Bukti Pembayaran
+                    </label>
+                    <input
+                      type="file"
+                      id="logo"
+                      ref={fileProofInputRef}
+                      onChange={handleInputFile}
+                      className="bg-white p-2 w-full text-slate-500 text-sm rounded-lg leading-6 border border-gray-300 focus:border-blue-500 file:bg-blue-500 file:text-white file:font-bold file:font-uppercase file:text-xs file:px-4 file:py-1 file:active:bg-blue-600 file:border-none file:mr-4 file:rounded"
+                    />
                   </div>
                 </div>
               </div>

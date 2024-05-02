@@ -1,10 +1,12 @@
+import { dataTableStyle } from "@/lib/dataTable/style";
 import Card from "@/views/components/Card";
 import Done from "@/views/components/Done";
 import { faBuilding } from "@fortawesome/free-regular-svg-icons";
-import { faCheck } from "@fortawesome/free-solid-svg-icons";
+import { faCheck, faPlus, faTrashCan } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import axios from "axios";
-import { useEffect, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
+import DataTable from "react-data-table-component";
 
 interface AdminIndexProps {
   companyId: string;
@@ -25,6 +27,45 @@ const AdminIndexLayout = ({ companyId }: AdminIndexProps) => {
     facility: true,
     schedule: true,
   });
+
+  const [document, setDocument] = useState([
+    {
+      name: "Pembuatan Visa dapat dilakukan di KBIHU 1",
+      description: "Silakan datang paling lambat tangal 10 Mei 2024",
+    },
+  ]);
+
+  const documentColumns = useMemo(
+    () => [
+      {
+        name: "Aksi",
+        cell: (row: any) => {
+          return (
+            <button className="bg-red-500 text-white active:bg-red-600 font-bold uppercase text-xs px-4 py-2 rounded shadow outline-none focus:outline-none mr-1 mb-1">
+              <FontAwesomeIcon icon={faTrashCan} />
+              <span className="ml-1">Hapus</span>
+            </button>
+          );
+        },
+        width: "150px",
+      },
+      {
+        name: "Judul",
+        cell: (row: any) => {
+          return row.name;
+        },
+      },
+      {
+        name: "Deskripsi",
+        cell: (row: any) => {
+          return row.description;
+        },
+      },
+    ],
+    []
+  );
+
+  const tableStyle: {} = dataTableStyle;
 
   useEffect(() => {
     const fetchData = async () => {
@@ -189,7 +230,25 @@ const AdminIndexLayout = ({ companyId }: AdminIndexProps) => {
           </div>
         </div>
       )}
-      <div>Informasi</div>
+      <div>
+        <h1 className="text-lg font-bold mt-4 mb-2">Informasi</h1>
+        <div className="mb-4">
+          <button className="bg-blue-500 text-white active:bg-blue-600 font-bold uppercase text-xs px-4 py-2 rounded shadow outline-none focus:outline-none">
+            <FontAwesomeIcon icon={faPlus} />
+            <span className="ml-1">Tambah Informasi Baru</span>
+          </button>
+        </div>
+        {document.length > 0 ? (
+          <DataTable
+            columns={documentColumns}
+            data={document}
+            pagination={true}
+            customStyles={tableStyle}
+          />
+        ) : (
+          "Tidak ada data dokumen"
+        )}
+      </div>
     </>
   );
 };

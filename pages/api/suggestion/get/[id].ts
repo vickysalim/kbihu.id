@@ -12,27 +12,25 @@ export default async function handler(
   try {
     if (!req.query.id) return api.res(res, 404, false, `ID is required`);
 
-    const payment = await prisma.user_payment.findMany({
+    const suggestion = await prisma.suggestion_box.findMany({
       select: {
         id: true,
-        amount: true,
-        note: true,
-        proof_file: true,
-        recipient: true,
-        transaction_date: true,
+        description: true,
+        is_mark: true,
+        created_at: true,
       },
       where: {
+        company_id: req.query.id as string,
         deleted_at: null,
-        user_account_id: req.query.id as string,
       },
       orderBy: {
-        transaction_date: "asc",
+        created_at: "desc",
       },
     });
 
-    if (!payment) api.null(res, payment, "Payment");
-
-    return api.res(res, 200, true, "Get payment data success", payment);
+    if (!suggestion) api.null(res, suggestion, "suggestion");
+    else
+      return api.res(res, 200, true, "Get suggestion data success", suggestion);
   } catch (error: any) {
     if (error instanceof z.ZodError) {
       const validation = error.errors.map((error) => ({

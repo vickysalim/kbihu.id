@@ -42,7 +42,7 @@ export default async function handler(
         const token = jwt.sign(
             { id: data.id },
             process.env.JWT_SECRET as Secret,
-            { expiresIn: `12h` }
+            { expiresIn: `365d` }
         )
 
         return api.res(res, 200, true, `Login success`, { token })

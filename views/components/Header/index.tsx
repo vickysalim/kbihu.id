@@ -3,7 +3,7 @@ import Link from "next/link";
 import { useState } from "react";
 import { Menu } from "@headlessui/react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faChevronDown } from "@fortawesome/free-solid-svg-icons";
+import { faChevronDown, faUser } from "@fortawesome/free-solid-svg-icons";
 import { link } from "fs";
 
 interface HeaderProps {
@@ -29,6 +29,11 @@ const Header = ({ role }: HeaderProps) => {
     {
       href: "/dashboard/schedule",
       name: "Manasik Haji",
+      role: ["Admin"],
+    },
+    {
+      href: "/dashboard/suggestion-box",
+      name: "Kotak Saran",
       role: ["Admin"],
     },
   ];
@@ -68,28 +73,17 @@ const Header = ({ role }: HeaderProps) => {
               <div className="flex items-baseline space-x-4">
                 <Menu>
                   <Menu.Button className="flex flex-row items-center">
-                    <img
-                      src="https://cdn-icons-png.flaticon.com/512/9131/9131529.png"
-                      alt="avatar"
-                      className="w-6 h-6 rounded-full"
-                    />
+                    <div className="w-6 h-6 rounded-full bg-blue-500 flex items-center justify-center">
+                      <FontAwesomeIcon
+                        icon={faUser}
+                        className="w-3 h-3 text-white"
+                      />
+                    </div>
                     <span className="ml-2 mr-2">Akun</span>
                     <FontAwesomeIcon icon={faChevronDown} className="w-3 h-3" />
                   </Menu.Button>
                   <Menu.Items className="origin-top-right absolute right-4 mt-10 w-56 rounded-md shadow-lg bg-white ring-1 ring-black ring-opacity-5 divide-y divide-gray-100 focus:outline-none">
                     <div className="py-2 flex flex-col gap-2">
-                      <Menu.Item>
-                        {({ active }) => (
-                          <Link
-                            href="/account-settings"
-                            className={`${
-                              active && "bg-blue-500 text-white"
-                            } py-2 px-2`}
-                          >
-                            Account settings
-                          </Link>
-                        )}
-                      </Menu.Item>
                       <Menu.Item>
                         {({ active }) => (
                           <button
