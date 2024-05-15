@@ -3,6 +3,7 @@ import { formatDate, formatDateInput } from "@/lib/date/format";
 import { downloadFile } from "@/lib/download";
 import Alert from "@/views/components/Alert";
 import Loader from "@/views/components/Loader";
+import AdminEditFacilityLayout from "@/views/layouts/AdminLayout/facility/edit";
 import AdminPilgrimsTabLayout from "@/views/layouts/AdminLayout/pilgrims/tab";
 import DashboardLayout from "@/views/layouts/DashboardLayout";
 import {
@@ -81,7 +82,6 @@ const DashboardPilgrimsFacilityDetail: React.FC = () => {
     user_facility: [
       {
         id: "",
-        file: "",
         description: "",
         submit_date: "",
       },
@@ -126,6 +126,7 @@ const DashboardPilgrimsFacilityDetail: React.FC = () => {
                 <button
                   type="button"
                   className="bg-blue-500 text-white active:bg-blue-600 font-bold uppercase text-xs px-4 py-2 rounded shadow outline-none focus:outline-none mr-1 mb-1"
+                  onClick={() => handleEditFacility(row.user_facility[0])}
                 >
                   <FontAwesomeIcon icon={faPencil} />
                   <span className="ml-1">Edit</span>
@@ -145,7 +146,7 @@ const DashboardPilgrimsFacilityDetail: React.FC = () => {
               <button
                 type="button"
                 className="bg-blue-500 text-white active:bg-blue-600 font-bold uppercase text-xs px-4 py-2 rounded shadow outline-none focus:outline-none mr-1 mb-1"
-                onClick={() => handleOpenEditModal(row.id, row.name)}
+                onClick={() => handleOpenInsertModal(row.id, row.name)}
               >
                 <FontAwesomeIcon icon={faPlus} />
                 <span className="ml-1">Lengkapi</span>
@@ -228,7 +229,7 @@ const DashboardPilgrimsFacilityDetail: React.FC = () => {
 
   // complete data
 
-  const [validationMessage, setValidationMessage] = useState<{
+  const [insertValidationMessage, setInsertValidationMessage] = useState<{
     [key: string]: string;
   }>({});
 
@@ -239,33 +240,33 @@ const DashboardPilgrimsFacilityDetail: React.FC = () => {
     submit_date: "",
   };
 
-  const [editModalOpen, setEditModalOpen] = useState(false);
-  const [editFacility, setEditFacility] = useState(userFacilityModel);
+  const [insertModalOpen, setInsertModalOpen] = useState(false);
+  const [insertFacility, setInsertFacility] = useState(userFacilityModel);
 
-  const handleOpenEditModal = (company_facility_id: any, name: any) => {
-    setEditModalOpen(true);
-    setEditFacility({
-      ...editFacility,
+  const handleOpenInsertModal = (company_facility_id: any, name: any) => {
+    setInsertModalOpen(true);
+    setInsertFacility({
+      ...insertFacility,
       name: name,
       company_facility_id: company_facility_id,
     });
   };
 
-  const handleCloseEditModal = () => {
-    setEditModalOpen(false);
-    setEditFacility(userFacilityModel);
+  const handleCloseInsertModal = () => {
+    setInsertModalOpen(false);
+    setInsertFacility(userFacilityModel);
   };
 
-  const validateEdit = async (e: any) => {
+  const validateInsert = async (e: any) => {
     e.preventDefault();
-    setValidationMessage({});
+    setInsertValidationMessage({});
 
     try {
       validation.parse({
-        date: editFacility.submit_date,
+        date: insertFacility.submit_date,
       });
 
-      handleEdit();
+      handleInsert();
     } catch (error) {
       if (error instanceof z.ZodError) {
         const errorMap: { [key: string]: string } = {};
@@ -274,26 +275,26 @@ const DashboardPilgrimsFacilityDetail: React.FC = () => {
             errorMap[err.path[0]] = err.message;
           }
         });
-        setValidationMessage(errorMap);
+        setInsertValidationMessage(errorMap);
       } else {
         setMessage(`Unknown error`);
       }
     }
   };
 
-  const handleEdit = async () => {
+  const handleInsert = async () => {
     try {
       await axios
         .post(`/api/pilgrims/facility/add`, {
-          facility_id: editFacility.company_facility_id,
+          facility_id: insertFacility.company_facility_id,
           user_id: userAccountId,
-          submit_date: editFacility.submit_date,
-          description: editFacility.description || null,
+          submit_date: insertFacility.submit_date,
+          description: insertFacility.description || null,
         })
         .then((res) => {
           setMessage(res.data.message);
           facilityData();
-          handleCloseEditModal();
+          handleCloseInsertModal();
         });
     } catch (error: any) {
       if (error.response) {
@@ -303,6 +304,26 @@ const DashboardPilgrimsFacilityDetail: React.FC = () => {
         setMessage(`Unknown Error`);
       }
     }
+  };
+
+  // edit
+
+  const [editModalOpen, setEditModalOpen] = useState(false);
+  const [editFacility, setEditFacility] = useState(facilityModel);
+
+  const handleEditFacility = (item: any) => {
+    setEditModalOpen(true);
+    setEditFacility(item);
+  };
+
+  const setEditMessage = (message: any) => {
+    setMessage(message);
+    closeEditFacility();
+  };
+
+  const closeEditFacility = () => {
+    setEditModalOpen(false);
+    setEditFacility(facilityModel);
   };
 
   useEffect(() => {
@@ -362,10 +383,10 @@ const DashboardPilgrimsFacilityDetail: React.FC = () => {
         "Terjadi kesalahan. Silakan refresh halaman."
       )}
 
-      {/* modal edit */}
+      {/* modal insert */}
       <Dialog
-        open={editModalOpen}
-        onClose={() => handleCloseEditModal()}
+        open={insertModalOpen}
+        onClose={() => handleCloseInsertModal()}
         className="relative z-50"
       >
         <div className="fixed inset-0 bg-black/30" aria-hidden="true" />
@@ -373,12 +394,12 @@ const DashboardPilgrimsFacilityDetail: React.FC = () => {
           <Dialog.Panel className="w-full max-w-lg p-6 rounded-lg bg-white">
             <Dialog.Title className="flex flex-row justify-between pb-4 border-b-2">
               <h2 className="text-xl font-semibold mb-2">Lengkapi Fasilitas</h2>
-              <button onClick={() => handleCloseEditModal()}>
+              <button onClick={() => handleCloseInsertModal()}>
                 <FontAwesomeIcon icon={faXmark} className="text-gray-500" />
               </button>
             </Dialog.Title>
             <Dialog.Description className="mt-4 flex flex-col">
-              <form onSubmit={validateEdit}>
+              <form onSubmit={validateInsert}>
                 <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-2 gap-4">
                   <div className="flex flex-col">
                     <label
@@ -390,7 +411,7 @@ const DashboardPilgrimsFacilityDetail: React.FC = () => {
                     <input
                       type="text"
                       id="name"
-                      value={editFacility.name}
+                      value={insertFacility.name}
                       disabled={true}
                       className="rounded-lg border border-gray-300 p-2 focus:outline-none focus:border-blue-500 disabled:bg-gray-100"
                     />
@@ -406,18 +427,18 @@ const DashboardPilgrimsFacilityDetail: React.FC = () => {
                     <input
                       type="date"
                       id="date"
-                      value={formatDateInput(editFacility.submit_date)}
+                      value={formatDateInput(insertFacility.submit_date)}
                       onChange={(e) =>
-                        setEditFacility({
-                          ...editFacility,
+                        setInsertFacility({
+                          ...insertFacility,
                           submit_date: e.target.value,
                         })
                       }
                       className="rounded-lg border border-gray-300 p-2 focus:outline-none focus:border-blue-500"
                     />
-                    {validationMessage.date && (
+                    {insertValidationMessage.date && (
                       <p className="text-sm text-red-500">
-                        {validationMessage.date}
+                        {insertValidationMessage.date}
                       </p>
                     )}
                   </div>
@@ -432,10 +453,10 @@ const DashboardPilgrimsFacilityDetail: React.FC = () => {
                     <input
                       type="text"
                       id="description"
-                      value={editFacility.description}
+                      value={insertFacility.description}
                       onChange={(e) =>
-                        setEditFacility({
-                          ...editFacility,
+                        setInsertFacility({
+                          ...insertFacility,
                           description: e.target.value,
                         })
                       }
@@ -448,6 +469,32 @@ const DashboardPilgrimsFacilityDetail: React.FC = () => {
                   <span className="ml-1">Lengkapi Fasilitas</span>
                 </button>
               </form>
+            </Dialog.Description>
+          </Dialog.Panel>
+        </div>
+      </Dialog>
+
+      {/* modal edit */}
+      <Dialog
+        open={editModalOpen}
+        onClose={() => closeEditFacility()}
+        className="relative z-50"
+      >
+        <div className="fixed inset-0 bg-black/30" aria-hidden="true" />
+        <div className="fixed inset-0 flex w-screen items-center justify-center p-4">
+          <Dialog.Panel className="w-full max-w-lg p-6 rounded-lg bg-white">
+            <Dialog.Title className="flex flex-row justify-between pb-4 border-b-2">
+              <h2 className="text-xl font-semibold mb-2">Edit Fasilitas</h2>
+              <button onClick={() => closeEditFacility()}>
+                <FontAwesomeIcon icon={faXmark} className="text-gray-500" />
+              </button>
+            </Dialog.Title>
+            <Dialog.Description className="mt-4 flex flex-col">
+              <AdminEditFacilityLayout
+                loadData={facilityData}
+                data={editFacility}
+                setMessage={setEditMessage}
+              />
             </Dialog.Description>
           </Dialog.Panel>
         </div>

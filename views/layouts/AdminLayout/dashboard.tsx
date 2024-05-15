@@ -1,12 +1,22 @@
 import { dataTableStyle } from "@/lib/dataTable/style";
+import Alert from "@/views/components/Alert";
 import Card from "@/views/components/Card";
 import Done from "@/views/components/Done";
 import { faBuilding } from "@fortawesome/free-regular-svg-icons";
-import { faCheck, faPlus, faTrashCan } from "@fortawesome/free-solid-svg-icons";
+import {
+  faCheck,
+  faPencil,
+  faPlus,
+  faTrashCan,
+  faXmark,
+} from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { Dialog, Disclosure } from "@headlessui/react";
 import axios from "axios";
-import { useEffect, useMemo, useState } from "react";
+import { title } from "process";
+import { useCallback, useEffect, useMemo, useState } from "react";
 import DataTable from "react-data-table-component";
+import AdminEditInformationLayout from "./information/edit";
 
 interface AdminIndexProps {
   companyId: string;
@@ -28,37 +38,164 @@ const AdminIndexLayout = ({ companyId }: AdminIndexProps) => {
     schedule: true,
   });
 
-  const [document, setDocument] = useState([
-    {
-      name: "Pembuatan Visa dapat dilakukan di KBIHU 1",
-      description: "Silakan datang paling lambat tangal 10 Mei 2024",
-    },
-  ]);
+  const informationModel = {
+    id: "",
+    title: "",
+    description: "",
+  };
 
-  const documentColumns = useMemo(
+  const [information, setInformation] = useState([informationModel]);
+  const [addInformation, setAddInformation] = useState(informationModel);
+
+  const [message, setMessage] = useState("");
+  const [validationMessage, setValidationMessage] = useState<{
+    [key: string]: string;
+  }>({});
+
+  const getInformation = useCallback(async () => {
+    try {
+      await axios.get(`/api/information/get/${companyId}`).then((res) => {
+        setInformation(res.data.data);
+      });
+    } catch (error) {
+      console.log(error);
+    }
+  }, [companyId]);
+
+  const validateInsert = async (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+    let errors = {};
+    if (!addInformation.title) {
+      errors = { ...errors, title: "Judul harus diisi" };
+    }
+    if (!addInformation.description) {
+      errors = { ...errors, description: "Deskripsi harus diisi" };
+    }
+    if (Object.keys(errors).length > 0) {
+      setValidationMessage(errors);
+    } else {
+      setValidationMessage({});
+      insertInformation();
+    }
+  };
+
+  // insert
+
+  const insertInformation = async () => {
+    try {
+      await axios
+        .post("/api/information/add", {
+          company_id: companyId,
+          title: addInformation.title,
+          description: addInformation.description,
+        })
+        .then((res) => {
+          setMessage(res.data.message);
+          setAddInformation(informationModel);
+          getInformation();
+        });
+    } catch (error: any) {
+      console.log(error.response.data.message);
+      if (error.response) {
+        const fieldError = error.response.data.message;
+        setMessage(`Error: ${fieldError}`);
+      } else {
+        setMessage(`Unknown Error`);
+      }
+    }
+  };
+
+  // edit
+
+  const [editModalOpen, setEditModalOpen] = useState(false);
+  const [editInformation, setEditInformation] = useState(informationModel);
+
+  const handleEditInformation = (item: any) => {
+    setEditModalOpen(true);
+    setEditInformation(item);
+  };
+
+  const setEditMessage = (message: any) => {
+    setMessage(message);
+    closeEditInformation();
+  };
+
+  const closeEditInformation = () => {
+    setEditModalOpen(false);
+    setEditInformation(informationModel);
+  };
+
+  // delete
+
+  const deleteInformation = async (id: string) => {
+    if (
+      confirm(
+        "Apakah anda yakin ingin menghapus data ini? Tindakan ini tidak dapat dibatalkan"
+      )
+    ) {
+      try {
+        await axios
+          .delete("/api/information/delete", {
+            data: {
+              id: id,
+            },
+          })
+          .then((res) => {
+            setMessage(res.data.message);
+            getInformation();
+          });
+      } catch (error: any) {
+        if (error.response) {
+          if (error.response.data.message[0].message)
+            setMessage(`Error: ${error.response.data.message[0].message}`);
+          else setMessage(`Error: ${error.response.data.message}`);
+        } else {
+          setMessage(`Unknown Error`);
+        }
+      }
+    }
+  };
+
+  const informationColumns = useMemo(
     () => [
       {
         name: "Aksi",
         cell: (row: any) => {
           return (
-            <button className="bg-red-500 text-white active:bg-red-600 font-bold uppercase text-xs px-4 py-2 rounded shadow outline-none focus:outline-none mr-1 mb-1">
-              <FontAwesomeIcon icon={faTrashCan} />
-              <span className="ml-1">Hapus</span>
-            </button>
+            <>
+              <button
+                className="bg-blue-500 text-white active:bg-blue-600 font-bold uppercase text-xs px-4 py-2 rounded shadow outline-none focus:outline-none mr-1 mb-1"
+                onClick={() => handleEditInformation(row)}
+              >
+                <FontAwesomeIcon icon={faPencil} />
+                <span className="ml-1">Edit</span>
+              </button>
+              <button
+                className="bg-red-500 text-white active:bg-red-600 font-bold uppercase text-xs px-4 py-2 rounded shadow outline-none focus:outline-none mr-1 mb-1"
+                onClick={() => deleteInformation(row.id)}
+              >
+                <FontAwesomeIcon icon={faTrashCan} />
+                <span className="ml-1">Hapus</span>
+              </button>
+            </>
           );
         },
-        width: "150px",
+        width: "200px",
       },
       {
         name: "Judul",
         cell: (row: any) => {
-          return row.name;
+          return row.title;
         },
       },
       {
         name: "Deskripsi",
         cell: (row: any) => {
-          return row.description;
+          return (
+            <div style={{ whiteSpace: "pre-wrap" }} className="line-clamp-2">
+              {row.description}
+            </div>
+          );
         },
       },
     ],
@@ -83,10 +220,12 @@ const AdminIndexLayout = ({ companyId }: AdminIndexProps) => {
       } catch (error) {
         console.log(error);
       }
+
+      getInformation();
     };
 
     fetchData();
-  }, [companyId]);
+  }, [companyId, getInformation]);
 
   return (
     <>
@@ -230,25 +369,121 @@ const AdminIndexLayout = ({ companyId }: AdminIndexProps) => {
           </div>
         </div>
       )}
+
       <div>
         <h1 className="text-lg font-bold mt-4 mb-2">Informasi</h1>
-        <div className="mb-4">
-          <button className="bg-blue-500 text-white active:bg-blue-600 font-bold uppercase text-xs px-4 py-2 rounded shadow outline-none focus:outline-none">
-            <FontAwesomeIcon icon={faPlus} />
-            <span className="ml-1">Tambah Informasi Baru</span>
-          </button>
+        <div className="mt-4">
+          {message && (
+            <Alert type={message.includes("Error") ? "error" : "success"}>
+              {message}
+            </Alert>
+          )}
         </div>
-        {document.length > 0 ? (
+        <div className="mb-4">
+          <Disclosure>
+            <Disclosure.Button className="mt-2 bg-blue-500 text-white active:bg-blue-600 font-bold uppercase text-xs px-4 py-2 rounded shadow outline-none focus:outline-none">
+              <FontAwesomeIcon icon={faPlus} />
+              <span className="ml-1">Tambah Informasi</span>
+            </Disclosure.Button>
+            <Disclosure.Panel className="mt-2 text-gray-500 bg-white rounded-lg p-4">
+              <form onSubmit={validateInsert}>
+                <div className="grid grid-cols-1 gap-4">
+                  <div className="flex flex-col">
+                    <label
+                      htmlFor="title"
+                      className="text-sm font-semibold text-gray-500"
+                    >
+                      Judul
+                    </label>
+                    <input
+                      type="text"
+                      id="title"
+                      value={addInformation.title}
+                      onChange={(e) =>
+                        setAddInformation({
+                          ...addInformation,
+                          title: e.target.value,
+                        })
+                      }
+                      className="rounded-lg border border-gray-300 p-2 focus:outline-none focus:border-blue-500 [appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none"
+                    />
+                    {validationMessage.title && (
+                      <p className="text-sm text-red-500">
+                        {validationMessage.title}
+                      </p>
+                    )}
+                  </div>
+                  <div className="flex flex-col">
+                    <label
+                      htmlFor="description"
+                      className="text-sm font-semibold text-gray-500"
+                    >
+                      Deskripsi
+                    </label>
+                    <textarea
+                      id="description"
+                      rows={5}
+                      value={addInformation.description}
+                      onChange={(e) =>
+                        setAddInformation({
+                          ...addInformation,
+                          description: e.target.value,
+                        })
+                      }
+                      className="rounded-lg border border-gray-300 p-2 focus:outline-none focus:border-blue-500 [appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none resize-none"
+                    />
+                    {validationMessage.description && (
+                      <p className="text-sm text-red-500">
+                        {validationMessage.description}
+                      </p>
+                    )}
+                  </div>
+                </div>
+                <button className="mt-3 bg-blue-500 text-white active:bg-blue-600 font-bold uppercase text-xs px-4 py-2 rounded shadow outline-none focus:outline-none">
+                  <FontAwesomeIcon icon={faPlus} />
+                  <span className="ml-1">Tambah</span>
+                </button>
+              </form>
+            </Disclosure.Panel>
+          </Disclosure>
+        </div>
+        {information.length > 0 ? (
           <DataTable
-            columns={documentColumns}
-            data={document}
+            columns={informationColumns}
+            data={information}
             pagination={true}
             customStyles={tableStyle}
           />
         ) : (
-          "Tidak ada data dokumen"
+          "Tidak ada data informasi"
         )}
       </div>
+
+      {/* modal edit */}
+      <Dialog
+        open={editModalOpen}
+        onClose={() => closeEditInformation()}
+        className="relative z-50"
+      >
+        <div className="fixed inset-0 bg-black/30" aria-hidden="true" />
+        <div className="fixed inset-0 flex w-screen items-center justify-center p-4">
+          <Dialog.Panel className="w-full max-w-lg p-6 rounded-lg bg-white">
+            <Dialog.Title className="flex flex-row justify-between pb-4 border-b-2">
+              <h2 className="text-xl font-semibold mb-2">Edit Informasi</h2>
+              <button onClick={() => closeEditInformation()}>
+                <FontAwesomeIcon icon={faXmark} className="text-gray-500" />
+              </button>
+            </Dialog.Title>
+            <Dialog.Description className="mt-4 flex flex-col">
+              <AdminEditInformationLayout
+                loadData={getInformation}
+                data={editInformation}
+                setMessage={setEditMessage}
+              />
+            </Dialog.Description>
+          </Dialog.Panel>
+        </div>
+      </Dialog>
     </>
   );
 };

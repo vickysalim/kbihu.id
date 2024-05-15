@@ -11,9 +11,10 @@ import {
   faPencil,
   faPlus,
   faTrashCan,
+  faXmark,
 } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { Disclosure } from "@headlessui/react";
+import { Dialog, Disclosure } from "@headlessui/react";
 import { PDFDownloadLink } from "@react-pdf/renderer";
 import axios from "axios";
 import { useRouter } from "next/router";
@@ -21,6 +22,7 @@ import React, { useEffect, useMemo, useRef, useState } from "react";
 import DataTable from "react-data-table-component";
 import { set, z } from "zod";
 import { padNumbers } from "@/lib/number/format";
+import AdminEditPaymentLayout from "@/views/layouts/AdminLayout/payment/edit";
 
 const validation = z.object({
   transaction_date: z.string().nonempty({ message: "Tanggal harus diisi" }),
@@ -199,6 +201,7 @@ const DashboardPilgrimsPaymentDetail: React.FC = () => {
               <button
                 type="button"
                 className="bg-blue-500 text-white active:bg-blue-600 font-bold uppercase text-xs px-4 py-2 rounded shadow outline-none focus:outline-none mr-1 mb-1"
+                onClick={() => handleEditPayment(row)}
               >
                 <FontAwesomeIcon icon={faPencil} />
                 <span className="ml-1">Edit</span>
@@ -405,6 +408,26 @@ const DashboardPilgrimsPaymentDetail: React.FC = () => {
     }
   };
 
+  // edit
+
+  const [editModalOpen, setEditModalOpen] = useState(false);
+  const [editPayment, setEditPayment] = useState(paymentModel);
+
+  const handleEditPayment = (item: any) => {
+    setEditModalOpen(true);
+    setEditPayment(item);
+  };
+
+  const setEditMessage = (message: any) => {
+    setMessage(message);
+    closeEditPayment();
+  };
+
+  const closeEditPayment = () => {
+    setEditModalOpen(false);
+    setEditPayment(paymentModel);
+  };
+
   useEffect(() => {
     if (!localStorage.getItem("token")) window.location.href = "/auth/login";
     else {
@@ -567,6 +590,32 @@ const DashboardPilgrimsPaymentDetail: React.FC = () => {
       ) : (
         "Belum ada data pembayaran"
       )}
+
+      {/* modal edit */}
+      <Dialog
+        open={editModalOpen}
+        onClose={() => closeEditPayment()}
+        className="relative z-50"
+      >
+        <div className="fixed inset-0 bg-black/30" aria-hidden="true" />
+        <div className="fixed inset-0 flex w-screen items-center justify-center p-4">
+          <Dialog.Panel className="w-full max-w-lg p-6 rounded-lg bg-white">
+            <Dialog.Title className="flex flex-row justify-between pb-4 border-b-2">
+              <h2 className="text-xl font-semibold mb-2">Edit Dokumen</h2>
+              <button onClick={() => closeEditPayment()}>
+                <FontAwesomeIcon icon={faXmark} className="text-gray-500" />
+              </button>
+            </Dialog.Title>
+            <Dialog.Description className="mt-4 flex flex-col">
+              <AdminEditPaymentLayout
+                loadData={paymentData}
+                data={editPayment}
+                setMessage={setEditMessage}
+              />
+            </Dialog.Description>
+          </Dialog.Panel>
+        </div>
+      </Dialog>
     </DashboardLayout>
   );
 };

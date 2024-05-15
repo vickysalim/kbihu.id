@@ -3,6 +3,7 @@ import { formatDate, formatDateInput } from "@/lib/date/format";
 import { downloadFile } from "@/lib/download";
 import Alert from "@/views/components/Alert";
 import Loader from "@/views/components/Loader";
+import AdminEditDocumentLayout from "@/views/layouts/AdminLayout/document/edit";
 import AdminPilgrimsTabLayout from "@/views/layouts/AdminLayout/pilgrims/tab";
 import DashboardLayout from "@/views/layouts/DashboardLayout";
 import {
@@ -94,7 +95,6 @@ const DashboardPilgrimsDocumentDetail: React.FC = () => {
   const [donePercentage, setDonePercentage] = useState(0);
 
   const documentData = useCallback(async () => {
-    console.log(router.query.id, " ", userAccountId);
     if (router.query.id != undefined) {
       await axios
         .get(`/api/pilgrims/document/get/${router.query.id}`)
@@ -126,6 +126,7 @@ const DashboardPilgrimsDocumentDetail: React.FC = () => {
                 <button
                   type="button"
                   className="bg-blue-500 text-white active:bg-blue-600 font-bold uppercase text-xs px-4 py-2 rounded shadow outline-none focus:outline-none mr-1 mb-1"
+                  onClick={() => handleEditDocument(row.user_document[0])}
                 >
                   <FontAwesomeIcon icon={faPencil} />
                   <span className="ml-1">Edit</span>
@@ -145,7 +146,7 @@ const DashboardPilgrimsDocumentDetail: React.FC = () => {
               <button
                 type="button"
                 className="bg-blue-500 text-white active:bg-blue-600 font-bold uppercase text-xs px-4 py-2 rounded shadow outline-none focus:outline-none mr-1 mb-1"
-                onClick={() => handleOpenEditModal(row.id, row.name)}
+                onClick={() => handleOpenInsertModal(row.id, row.name)}
               >
                 <FontAwesomeIcon icon={faPlus} />
                 <span className="ml-1">Lengkapi</span>
@@ -252,7 +253,7 @@ const DashboardPilgrimsDocumentDetail: React.FC = () => {
 
   // complete data
 
-  const [validationMessage, setValidationMessage] = useState<{
+  const [insertValidationMessage, setInsertValidationMessage] = useState<{
     [key: string]: string;
   }>({});
 
@@ -264,21 +265,21 @@ const DashboardPilgrimsDocumentDetail: React.FC = () => {
     submit_date: "",
   };
 
-  const [editModalOpen, setEditModalOpen] = useState(false);
-  const [editDocument, setEditDocument] = useState(userDocumentModel);
+  const [insertModalOpen, setInsertModalOpen] = useState(false);
+  const [insertDocument, setInsertDocument] = useState(userDocumentModel);
 
-  const handleOpenEditModal = (company_document_id: any, name: any) => {
-    setEditModalOpen(true);
-    setEditDocument({
-      ...editDocument,
+  const handleOpenInsertModal = (company_document_id: any, name: any) => {
+    setInsertModalOpen(true);
+    setInsertDocument({
+      ...insertDocument,
       name: name,
       company_document_id: company_document_id,
     });
   };
 
-  const handleCloseEditModal = () => {
-    setEditModalOpen(false);
-    setEditDocument(userDocumentModel);
+  const handleCloseInsertModal = () => {
+    setInsertModalOpen(false);
+    setInsertDocument(userDocumentModel);
   };
 
   const fileInputRef = useRef(null);
@@ -286,20 +287,20 @@ const DashboardPilgrimsDocumentDetail: React.FC = () => {
   const handleInputFile = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
     if (file) {
-      setEditDocument({ ...editDocument, file: file });
+      setInsertDocument({ ...insertDocument, file: file });
     }
   };
 
-  const validateEdit = async (e: any) => {
+  const validateInsert = async (e: any) => {
     e.preventDefault();
-    setValidationMessage({});
+    setInsertValidationMessage({});
 
     try {
       validation.parse({
-        date: editDocument.submit_date,
+        date: insertDocument.submit_date,
       });
 
-      handleEdit();
+      handleInsert();
     } catch (error) {
       if (error instanceof z.ZodError) {
         const errorMap: { [key: string]: string } = {};
@@ -308,30 +309,30 @@ const DashboardPilgrimsDocumentDetail: React.FC = () => {
             errorMap[err.path[0]] = err.message;
           }
         });
-        setValidationMessage(errorMap);
+        setInsertValidationMessage(errorMap);
       } else {
         setMessage(`Unknown error`);
       }
     }
   };
 
-  const handleEdit = async () => {
+  const handleInsert = async () => {
     let formData = new FormData();
 
-    formData.append("document_id", editDocument.company_document_id);
+    formData.append("document_id", insertDocument.company_document_id);
     formData.append("user_id", userAccountId);
-    formData.append("submit_date", editDocument.submit_date);
+    formData.append("submit_date", insertDocument.submit_date);
 
-    if (editDocument.description)
-      formData.append("description", editDocument.description);
+    if (insertDocument.description)
+      formData.append("description", insertDocument.description);
 
-    if (editDocument.file) formData.append("file", editDocument.file);
+    if (insertDocument.file) formData.append("file", insertDocument.file);
 
     try {
       await axios.post(`/api/pilgrims/document/add`, formData).then((res) => {
         setMessage(res.data.message);
         documentData();
-        handleCloseEditModal();
+        handleCloseInsertModal();
       });
     } catch (error: any) {
       if (error.response) {
@@ -341,6 +342,26 @@ const DashboardPilgrimsDocumentDetail: React.FC = () => {
         setMessage(`Unknown Error`);
       }
     }
+  };
+
+  // edit
+
+  const [editModalOpen, setEditModalOpen] = useState(false);
+  const [editDocument, setEditDocument] = useState(documentModel);
+
+  const handleEditDocument = (item: any) => {
+    setEditModalOpen(true);
+    setEditDocument(item);
+  };
+
+  const setEditMessage = (message: any) => {
+    setMessage(message);
+    closeEditDocument();
+  };
+
+  const closeEditDocument = () => {
+    setEditModalOpen(false);
+    setEditDocument(documentModel);
   };
 
   useEffect(() => {
@@ -400,10 +421,10 @@ const DashboardPilgrimsDocumentDetail: React.FC = () => {
         "Terjadi kesalahan. Silakan refresh halaman."
       )}
 
-      {/* modal edit */}
+      {/* modal insert */}
       <Dialog
-        open={editModalOpen}
-        onClose={() => handleCloseEditModal()}
+        open={insertModalOpen}
+        onClose={() => handleCloseInsertModal()}
         className="relative z-50"
       >
         <div className="fixed inset-0 bg-black/30" aria-hidden="true" />
@@ -411,12 +432,12 @@ const DashboardPilgrimsDocumentDetail: React.FC = () => {
           <Dialog.Panel className="w-full max-w-lg p-6 rounded-lg bg-white">
             <Dialog.Title className="flex flex-row justify-between pb-4 border-b-2">
               <h2 className="text-xl font-semibold mb-2">Lengkapi Dokumen</h2>
-              <button onClick={() => handleCloseEditModal()}>
+              <button onClick={() => handleCloseInsertModal()}>
                 <FontAwesomeIcon icon={faXmark} className="text-gray-500" />
               </button>
             </Dialog.Title>
             <Dialog.Description className="mt-4 flex flex-col">
-              <form onSubmit={validateEdit}>
+              <form onSubmit={validateInsert}>
                 <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-2 gap-4">
                   <div className="flex flex-col">
                     <label
@@ -428,7 +449,7 @@ const DashboardPilgrimsDocumentDetail: React.FC = () => {
                     <input
                       type="text"
                       id="name"
-                      value={editDocument.name}
+                      value={insertDocument.name}
                       disabled={true}
                       className="rounded-lg border border-gray-300 p-2 focus:outline-none focus:border-blue-500 disabled:bg-gray-100"
                     />
@@ -444,18 +465,18 @@ const DashboardPilgrimsDocumentDetail: React.FC = () => {
                     <input
                       type="date"
                       id="date"
-                      value={formatDateInput(editDocument.submit_date)}
+                      value={formatDateInput(insertDocument.submit_date)}
                       onChange={(e) =>
-                        setEditDocument({
-                          ...editDocument,
+                        setInsertDocument({
+                          ...insertDocument,
                           submit_date: e.target.value,
                         })
                       }
                       className="rounded-lg border border-gray-300 p-2 focus:outline-none focus:border-blue-500"
                     />
-                    {validationMessage.date && (
+                    {insertValidationMessage.date && (
                       <p className="text-sm text-red-500">
-                        {validationMessage.date}
+                        {insertValidationMessage.date}
                       </p>
                     )}
                   </div>
@@ -470,10 +491,10 @@ const DashboardPilgrimsDocumentDetail: React.FC = () => {
                     <input
                       type="text"
                       id="description"
-                      value={editDocument.description}
+                      value={insertDocument.description}
                       onChange={(e) =>
-                        setEditDocument({
-                          ...editDocument,
+                        setInsertDocument({
+                          ...insertDocument,
                           description: e.target.value,
                         })
                       }
@@ -502,6 +523,32 @@ const DashboardPilgrimsDocumentDetail: React.FC = () => {
                   <span className="ml-1">Lengkapi Dokumen</span>
                 </button>
               </form>
+            </Dialog.Description>
+          </Dialog.Panel>
+        </div>
+      </Dialog>
+
+      {/* modal edit */}
+      <Dialog
+        open={editModalOpen}
+        onClose={() => closeEditDocument()}
+        className="relative z-50"
+      >
+        <div className="fixed inset-0 bg-black/30" aria-hidden="true" />
+        <div className="fixed inset-0 flex w-screen items-center justify-center p-4">
+          <Dialog.Panel className="w-full max-w-lg p-6 rounded-lg bg-white">
+            <Dialog.Title className="flex flex-row justify-between pb-4 border-b-2">
+              <h2 className="text-xl font-semibold mb-2">Edit Dokumen</h2>
+              <button onClick={() => closeEditDocument()}>
+                <FontAwesomeIcon icon={faXmark} className="text-gray-500" />
+              </button>
+            </Dialog.Title>
+            <Dialog.Description className="mt-4 flex flex-col">
+              <AdminEditDocumentLayout
+                loadData={documentData}
+                data={editDocument}
+                setMessage={setEditMessage}
+              />
             </Dialog.Description>
           </Dialog.Panel>
         </div>
