@@ -145,7 +145,10 @@ const DashboardPilgrimsPaymentDetail: React.FC = () => {
           .get(`/api/pilgrims/data/get/${router.query.id}`)
           .then((res) => {
             setPilgrim(res.data.data);
-            companyData(res.data.data.company_id);
+            companyData(
+              res.data.data.company_id,
+              res.data.data.user_profile.departure_year
+            );
           });
       } catch (error) {
         console.log(error);
@@ -170,16 +173,38 @@ const DashboardPilgrimsPaymentDetail: React.FC = () => {
 
   const [company, setCompany] = useState(companyModel);
 
-  const companyData = async (id: string) => {
+  const companyData = async (id: string, departure: string) => {
     if (id != undefined) {
       try {
         await axios.get(`/api/company/get/${id}`).then((res) => {
           setCompany(res.data.data);
-          setLoading(false);
+          scheduleData(res.data.data.id, departure);
         });
       } catch (error) {
         console.log(error);
       }
+    }
+  };
+
+  const scheduleModel = {
+    id: "",
+    year: "",
+    amount: "",
+    file: "",
+  };
+
+  const [schedule, setSchedule] = useState(scheduleModel);
+
+  const scheduleData = async (companyId: string, departureYear: string) => {
+    try {
+      await axios
+        .get(`/api/schedule/getByYear/${companyId}/${departureYear}`)
+        .then((res) => {
+          setSchedule(res.data.data);
+          setLoading(false);
+        });
+    } catch (error) {
+      console.log(error);
     }
   };
 
@@ -444,6 +469,43 @@ const DashboardPilgrimsPaymentDetail: React.FC = () => {
     <DashboardLayout pageName="Data Pembayaran Jemaah Haji" role="Admin">
       <AdminPilgrimsTabLayout id={router.query.id} activeTab="payment" />
 
+      <div className="mb-2">
+        <div className="flex justify-between">
+          <div>
+            <p className="text-lg font-semibold text-gray-500">
+              Jumlah Pembayaran
+            </p>
+            <p className="text-2xl font-bold text-blue-500">
+              Rp.{" "}
+              {payment
+                .reduce((acc, curr) => acc + parseInt(curr.amount), 0)
+                .toString()
+                .replace(/(\d)(?=(\d{3})+(?!\d))/g, "$1,")}
+              <span className="text-sm font-semibold text-gray-500">
+                {" "}
+                dari Rp.{" "}
+                {schedule.amount
+                  .toString()
+                  .replace(/(\d)(?=(\d{3})+(?!\d))/g, "$1,")}
+              </span>
+            </p>
+          </div>
+          <div>
+            <p className="text-lg font-semibold text-gray-500">
+              Sisa Pembayaran
+            </p>
+            <p className="text-2xl font-bold text-red-500">
+              Rp.{" "}
+              {(
+                schedule.amount -
+                payment.reduce((acc, curr) => acc + parseInt(curr.amount), 0)
+              )
+                .toString()
+                .replace(/(\d)(?=(\d{3})+(?!\d))/g, "$1,")}
+            </p>
+          </div>
+        </div>
+      </div>
       <div className="mb-2">
         <Disclosure>
           <Disclosure.Button className="mt-2 bg-blue-500 text-white active:bg-blue-600 font-bold uppercase text-xs px-4 py-2 rounded shadow outline-none focus:outline-none">

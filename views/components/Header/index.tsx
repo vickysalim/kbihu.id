@@ -87,6 +87,20 @@ const Header = ({ role }: HeaderProps) => {
                       <Menu.Item>
                         {({ active }) => (
                           <button
+                            onClick={() =>
+                              (window.location.href = "/dashboard/help")
+                            }
+                            className={`${
+                              active && "bg-blue-500 text-white"
+                            } py-2 px-2 text-left`}
+                          >
+                            Pusat Bantuan
+                          </button>
+                        )}
+                      </Menu.Item>
+                      <Menu.Item>
+                        {({ active }) => (
+                          <button
                             onClick={() => handleLogout()}
                             className={`${
                               active && "bg-blue-500 text-white"
@@ -175,6 +189,12 @@ const Header = ({ role }: HeaderProps) => {
               return null;
             })}
             <div className="flex items items-center px-3 py-2 justify-between w-full gap-4">
+              <button
+                className="cursor-pointer text-primary-500 font-light px-4 py-1.5 rounded-md text-md hover:text-primary-600 border border-primary-500 w-full justify-center inline-block text-center"
+                onClick={() => (window.location.href = "/dashboard/help")}
+              >
+                Pusat Bantuan
+              </button>
               <button
                 className="cursor-pointer text-primary-500 font-light px-4 py-1.5 rounded-md text-md hover:text-primary-600 border border-primary-500 w-full justify-center inline-block text-center"
                 onClick={() => handleLogout()}

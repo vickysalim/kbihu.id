@@ -87,6 +87,8 @@ const DashboardPilgrims: React.FC = () => {
       passport_issue_office: "",
       passport_endorsement: "",
       identity_number: "",
+      departure_group: "",
+      embarkation: "",
     },
   };
 
@@ -203,11 +205,17 @@ const DashboardPilgrims: React.FC = () => {
         width: "150px",
       },
       {
-        name: "Tahun Keberangkatan",
+        name: "Keberangkatan",
         cell: (row: any) => {
-          return row.user_profile.departure_year;
+          return (
+            <div className="flex flex-col">
+              <div>Tahun: {row.user_profile.departure_year}</div>
+              <div>Kloter: {row.user_profile.departure_group || "-"}</div>
+              <div>Embarkasi: {row.user_profile.embarkation || "-"}</div>
+            </div>
+          );
         },
-        width: "200px",
+        width: "250px",
       },
       {
         name: "Bank",

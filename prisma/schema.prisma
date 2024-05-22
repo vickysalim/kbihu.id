@@ -207,6 +207,8 @@ model user_profile {
   passport_issue_office String       @db.VarChar(64)
   passport_endorsement  String?      @db.VarChar(128)
   identity_number       String       @db.VarChar(16)
+  departure_group       Int?
+  embarkation           String?      @db.VarChar(32)
   created_at            DateTime     @default(now()) @db.DateTime(0)
   updated_at            DateTime     @default(now()) @db.DateTime(0)
   deleted_at            DateTime?    @db.DateTime(0)
@@ -244,6 +246,7 @@ model company_simulation_schedule {
   company_id String    @db.VarChar(36)
   file       String    @db.VarChar(48)
   year       Int
+  amount     Int       @default(0)
   created_at DateTime  @default(now()) @db.DateTime(0)
   updated_at DateTime  @default(now()) @db.DateTime(0)
   deleted_at DateTime? @db.DateTime(0)

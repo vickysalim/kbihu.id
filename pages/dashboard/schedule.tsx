@@ -59,6 +59,7 @@ const DashboardConfiguration: React.FC = () => {
     id: "",
     file: "",
     year: "",
+    amount: "",
   };
 
   const [schedule, setSchedule] = useState([scheduleModel]);
@@ -141,6 +142,12 @@ const DashboardConfiguration: React.FC = () => {
         },
       },
       {
+        name: "Biaya Manasik Haji",
+        cell: (row: any) => {
+          return row.amount;
+        },
+      },
+      {
         name: "File",
         cell: (row: any) => {
           return (
@@ -184,6 +191,9 @@ const DashboardConfiguration: React.FC = () => {
     if (!addSchedule.year) {
       errors = { ...errors, year: "Tahun keberangkatan harus diisi" };
     }
+    if (!addSchedule.amount) {
+      errors = { ...errors, amount: "Biaya manasik haji harus diisi" };
+    }
     if (Object.keys(errors).length > 0) {
       setValidationMessage(errors);
     } else {
@@ -197,6 +207,7 @@ const DashboardConfiguration: React.FC = () => {
     formData.append("id", user.company_id as unknown as string);
     formData.append("year", addSchedule.year);
     formData.append("file", addSchedule.file);
+    formData.append("amount", addSchedule.amount);
     try {
       await axios.post("/api/schedule/add", formData).then((response) => {
         setMessage(response.data.message);
@@ -278,6 +289,28 @@ const DashboardConfiguration: React.FC = () => {
                   {validationMessage.file && (
                     <p className="text-sm text-red-500">
                       {validationMessage.file}
+                    </p>
+                  )}
+                </div>
+                <div className="flex flex-col">
+                  <label
+                    htmlFor="amount"
+                    className="text-sm font-semibold text-gray-500"
+                  >
+                    Jumlah Pembayaran Manasik Haji
+                  </label>
+                  <input
+                    type="number"
+                    id="amount"
+                    value={addSchedule.amount}
+                    onChange={(e) =>
+                      setAddSchedule({ ...addSchedule, amount: e.target.value })
+                    }
+                    className="rounded-lg border border-gray-300 p-2 focus:outline-none focus:border-blue-500 [appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none"
+                  />
+                  {validationMessage.amount && (
+                    <p className="text-sm text-red-500">
+                      {validationMessage.amount}
                     </p>
                   )}
                 </div>

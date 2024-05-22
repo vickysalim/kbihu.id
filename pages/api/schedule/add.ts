@@ -89,6 +89,7 @@ export default async function handler(
                   company_id: data.id as string,
                   file: finalFileName,
                   year: parseInt(req.body.year),
+                  amount: parseInt(req.body.amount),
                 },
               })
               .catch((err) => {

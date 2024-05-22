@@ -9,35 +9,20 @@ export default async function handler(
   api.method(req, res, `POST`);
 
   try {
-    const {
-      channel,
-      lat,
-      long,
-      userName,
-      departureGroup,
-      embarkation,
-      phoneNumber,
-    } = req.body;
+    const { channel, userName, description, status } = req.body;
 
     if (!channel) return api.res(res, 400, false, `Channel is required`);
-    if (!lat) return api.res(res, 400, false, `Latitude is required`);
-    if (!long) return api.res(res, 400, false, `Longitude is required`);
     if (!userName) return api.res(res, 400, false, `User Name is required`);
-    if (!departureGroup)
-      return api.res(res, 400, false, `Departure Group is required`);
-    if (!embarkation)
-      return api.res(res, 400, false, `Embarkation is required`);
-    if (!phoneNumber)
-      return api.res(res, 400, false, `Phone Number is required`);
+    if (!description)
+      return api.res(res, 400, false, `Description is required`);
+    if (!status) return api.res(res, 400, false, `Status is required`);
 
     const messagePayload: admin.messaging.Message = {
       data: {
-        lat: lat as string,
-        long: long as string,
         name: userName as string,
-        departureGroup: departureGroup as string,
-        embarkation: embarkation as string,
-        phoneNumber: phoneNumber as string,
+        description: description as string,
+        status: status as string,
+        // show utc time in epoch unix format
         time: Math.floor(Date.now() / 1000).toString() as string,
       },
       topic: channel as string,
@@ -50,7 +35,7 @@ export default async function handler(
         res,
         200,
         true,
-        `Successfully send emergency notification: ${response}`
+        `Successfully send found notification: ${response}`
       );
     } catch (error) {
       return api.error(res, error.message);

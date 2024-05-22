@@ -89,6 +89,8 @@ const DashboardPilgrimsDetail: React.FC = () => {
       passport_issue_office: "",
       passport_endorsement: "",
       identity_number: "",
+      departure_group: "",
+      embarkation: "",
     },
   };
 
@@ -150,6 +152,8 @@ const DashboardPilgrimsDetail: React.FC = () => {
           passport_endorsement: pilgrim.user_profile.passport_endorsement,
           identity_number: pilgrim.user_profile.identity_number,
           phone_number: pilgrim.phone_number,
+          departure_group: pilgrim.user_profile.departure_group,
+          embarkation: pilgrim.user_profile.embarkation,
         })
         .then((res) => {
           setMessage(res.data.message);
@@ -577,6 +581,84 @@ const DashboardPilgrimsDetail: React.FC = () => {
                   }
                   className="w-full rounded-lg border border-gray-300 p-2 focus:outline-none focus:border-blue-500"
                 />
+              </div>
+              <div className="mb-2">
+                <label
+                  htmlFor="departure_group"
+                  className="text-sm font-semibold text-gray-500"
+                >
+                  Kloter Penerbangan
+                </label>
+                <input
+                  type="number"
+                  id="departure_group"
+                  value={pilgrim.user_profile.departure_group}
+                  onChange={(e) =>
+                    setPilgrim({
+                      ...pilgrim,
+                      user_profile: {
+                        ...pilgrim.user_profile,
+                        departure_group: e.target.value,
+                      },
+                    })
+                  }
+                  className="w-full rounded-lg border border-gray-300 p-2 focus:outline-none focus:border-blue-500"
+                />
+              </div>
+              <div className="mb-2">
+                <label
+                  htmlFor="embarkation"
+                  className="text-sm font-semibold text-gray-500"
+                >
+                  Embarkasi
+                </label>
+                {/* <input
+                  type="text"
+                  id="embarkation"
+                  value={pilgrim.user_profile.embarkation}
+                  onChange={(e) =>
+                    setPilgrim({
+                      ...pilgrim,
+                      user_profile: {
+                        ...pilgrim.user_profile,
+                        embarkation: e.target.value,
+                      },
+                    })
+                  }
+                  className="w-full rounded-lg border border-gray-300 p-2 focus:outline-none focus:border-blue-500"
+                /> */}
+                <select
+                  id="embarkation"
+                  value={pilgrim.user_profile.embarkation}
+                  onChange={(e) =>
+                    setPilgrim({
+                      ...pilgrim,
+                      user_profile: {
+                        ...pilgrim.user_profile,
+                        embarkation: e.target.value,
+                      },
+                    })
+                  }
+                  className="w-full rounded-lg border border-gray-300 p-2 focus:outline-none focus:border-blue-500"
+                >
+                  <option value="">-- Belum dipilih --</option>
+                  <option value="Banda Aceh (BTJ)">Banda Aceh (BTJ)</option>
+                  <option value="Kualanamu (KNO)">Kualanamu (KNO)</option>
+                  <option value="Padang (PDG)">Padang (PDG)</option>
+                  <option value="Batam (BTH)">Batam (BTH)</option>
+                  <option value="Palembang (PLM)">Palembang (PLM)</option>
+                  <option value="Jakarta Pondok Gede (JKG)">
+                    Jakarta Pondok Gede (JKG)
+                  </option>
+                  <option value="Jakarta (CKG)">Jakarta (CKG)</option>
+                  <option value="Solo (SOC)">Solo (SOC)</option>
+                  <option value="Surabaya (SUB)">Surabaya (SUB)</option>
+                  <option value="Banjarmasin (BDJ)">Banjarmasin (BDJ)</option>
+                  <option value="Balikpapan (BPN)">Balikpapan (BPN)</option>
+                  <option value="Ujungpandang (UPG)">Ujungpandang (UPG)</option>
+                  <option value="Lombok (LOP)">Lombok (LOP)</option>
+                  <option value="Kertajati (KJT)">Kertajati (KJT)</option>
+                </select>
               </div>
             </div>
           </div>

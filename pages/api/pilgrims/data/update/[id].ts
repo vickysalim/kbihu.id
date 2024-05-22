@@ -42,6 +42,8 @@ export default async function handler(
       passport_endorsement,
       identity_number,
       phone_number,
+      departure_group,
+      embarkation,
     } = req.body;
 
     if (!req.query.id) return api.res(res, 404, false, `ID is required`);
@@ -137,6 +139,8 @@ export default async function handler(
             passport_issue_office || profileData.passport_issue_office,
           passport_endorsement: passport_endorsement || null,
           identity_number: identity_number || profileData.identity_number,
+          departure_group: parseInt(departure_group) || null,
+          embarkation: embarkation || null,
           updated_at: new Date(),
         },
       })

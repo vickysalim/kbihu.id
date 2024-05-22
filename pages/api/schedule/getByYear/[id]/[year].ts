@@ -11,6 +11,7 @@ export default async function handler(
 
   try {
     if (!req.query.id) return api.res(res, 404, false, `ID is required`);
+    if (!req.query.year) return api.res(res, 404, false, `Year is required`);
 
     const schedule = await prisma.company_simulation_schedule.findMany({
       select: {
@@ -20,7 +21,7 @@ export default async function handler(
         amount: true,
       },
       where: {
-        year: new Date().getFullYear(),
+        year: parseInt(req.query.year as string) as number,
         company_id: req.query.id as string,
         deleted_at: null,
       },

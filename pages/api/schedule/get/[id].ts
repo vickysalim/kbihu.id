@@ -17,6 +17,7 @@ export default async function handler(
         id: true,
         file: true,
         year: true,
+        amount: true,
       },
       where: {
         company_id: req.query.id as string,
